@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <rect width="200" height="200" rx="16" fill="#1B7A3D" fill-opacity="0.08"/>
+  <rect x="40" y="40" width="120" height="120" rx="12" fill="#1B7A3D" fill-opacity="0.18"/>
+  <text x="100" y="105" font-family="Arial, sans-serif" font-size="14" fill="#1B7A3D" text-anchor="middle" font-weight="600">Speaker</text>
+</svg>
