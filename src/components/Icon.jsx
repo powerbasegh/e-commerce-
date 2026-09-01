@@ -94,6 +94,9 @@ const paths = {
       <rect x="17" y="13" width="5" height="6" rx="1.5" />
     </>
   ),
+  flash: (
+    <path d="m13 2-9 12h7l-1 8 9-13h-7l1-7Z" />
+  ),
   star: (
     <path d="M12 2.5 15 9l7 1-5 5 1.4 7-6.4-3.5L5.6 22 7 15 2 10l7-1 3-6.5Z" />
   ),
