@@ -16,7 +16,7 @@ export default function ProductCard({ product, className = '' }) {
 
   return (
     <Link to={`/product/${product.id}`}
-      className={`group flex w-[164px] shrink-0 flex-col overflow-hidden rounded-xl border border-pb-gray-border bg-white shadow-card transition-all hover:-translate-y-0.5 hover:border-pb-green/30 hover:shadow-panel sm:w-[180px] ${className}`}>
+      className={`group flex w-[160px] shrink-0 flex-col overflow-hidden rounded-xl border border-pb-gray-border bg-white shadow-card transition-all hover:-translate-y-0.5 hover:border-pb-green/30 hover:shadow-panel sm:w-[176px] ${className}`}>
       <div className="relative aspect-square overflow-hidden bg-pb-gray-bg p-2.5">
         {typeof discountPercent === 'number' && discountPercent > 0 && (
           <span className="absolute left-2 top-2 z-10 rounded-md bg-pb-red px-2 py-1 text-[10px] font-bold text-white">-{discountPercent}%</span>

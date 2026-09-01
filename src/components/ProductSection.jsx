@@ -20,7 +20,7 @@ export default function ProductSection({ title, products, viewAllHref = '/produc
       {isMobile ? (
         <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-1">{products.map((p) => <ProductCard key={p.id} product={p} />)}</div>
       ) : (
-        <div className="grid grid-cols-3 gap-3 md:grid-cols-4 2xl:grid-cols-6">{products.map((p) => <ProductCard key={p.id} product={p} className="w-full" />)}</div>
+        <div className="grid grid-cols-3 gap-3 md:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">{products.map((p) => <ProductCard key={p.id} product={p} className="w-full" />)}</div>
       )}
     </section>
   )

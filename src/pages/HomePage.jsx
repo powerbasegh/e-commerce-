@@ -5,7 +5,7 @@ import Hero from '../components/Hero.jsx'
 import ProductSection from '../components/ProductSection.jsx'
 import PromoCards from '../components/PromoCards.jsx'
 import TrustSection from '../components/TrustSection.jsx'
-import CartPanel from '../components/CartPanel.jsx'
+import HomePromoPanel from '../components/HomePromoPanel.jsx'
 import PopularCategories from '../components/PopularCategories.jsx'
 import MobileHeader from '../components/MobileHeader.jsx'
 import MobileSearch from '../components/MobileSearch.jsx'
@@ -33,40 +33,44 @@ export default function HomePage() {
     <div className="min-h-screen bg-pb-gray-bg">
       <Header activePath="/" />
 
-      <div className="mx-auto hidden max-w-[1480px] gap-5 px-5 py-5 xl:flex">
+      <div className="mx-auto hidden max-w-[1480px] grid-cols-[220px_minmax(0,1fr)] gap-5 px-5 py-5 xl:grid xl:grid-cols-[220px_minmax(0,1fr)] 2xl:grid-cols-[220px_minmax(0,1fr)_275px]">
         <Sidebar />
 
-        <main className="flex min-w-0 flex-1 flex-col gap-5">
-          <Hero variant="desktop" />
+        <main className="col-start-2 min-w-0">
+          <div className="flex flex-col gap-5">
+            <Hero variant="desktop" />
 
-          {loading ? (
-            <SectionSkeleton />
-          ) : (
-            <>
-              <ProductSection
-                title="Flash Deals"
-                products={flashDeals}
-                viewAllHref="/flash-deals"
-                countdownSeconds={flashDealsEndsInSeconds}
-                variant="desktop"
-              />
-              <div className="grid grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] gap-5">
-                <PopularCategories />
+            {loading ? (
+              <SectionSkeleton />
+            ) : (
+              <>
                 <ProductSection
-                  title="Recommended for you"
-                  products={recommended}
-                  viewAllHref="/recommended"
+                  title="Flash Deals"
+                  products={flashDeals}
+                  viewAllHref="/flash-deals"
+                  countdownSeconds={flashDealsEndsInSeconds}
                   variant="desktop"
                 />
-              </div>
-            </>
-          )}
+                <div className="grid grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] gap-5">
+                  <PopularCategories />
+                  <ProductSection
+                    title="Recommended for you"
+                    products={recommended}
+                    viewAllHref="/recommended"
+                    variant="desktop"
+                  />
+                </div>
+              </>
+            )}
 
-          <PromoCards variant="desktop" />
-          <TrustSection variant="desktop" />
+            <PromoCards variant="desktop" />
+            <TrustSection variant="desktop" />
+          </div>
         </main>
 
-        <CartPanel />
+        <div className="col-start-3 row-start-1">
+          <HomePromoPanel />
+        </div>
       </div>
 
       <div className="xl:hidden">
