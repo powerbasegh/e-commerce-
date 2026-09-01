@@ -4,12 +4,14 @@ import Icon from './Icon.jsx'
 import { categories } from '../data/mockData.js'
 import { useCart } from '../context/CartContext.jsx'
 import { useAccount } from '../context/AccountContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 
 export default function MobileHeader({ onOpenMenu }) {
   const [menuOpen, setMenuOpen] = useState(false)
   const { totalCount: cartCount } = useCart()
   // Real unread notification count — see the same note in Header.jsx.
   const { unreadNotificationCount } = useAccount()
+  const { isAuthenticated, user, logout } = useAuth()
 
   function toggleMenu() {
     setMenuOpen((v) => !v)
@@ -98,6 +100,30 @@ export default function MobileHeader({ onOpenMenu }) {
             >
               Become a Vendor
             </a>
+
+            {isAuthenticated ? (
+              <div className="mt-3 flex items-center justify-between rounded-card border border-pb-gray-border px-3 py-2.5">
+                <span className="truncate text-sm text-pb-gray-text">{user?.fullName}</span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    logout()
+                    setMenuOpen(false)
+                  }}
+                  className="shrink-0 text-xs font-semibold text-pb-red"
+                >
+                  Log Out
+                </button>
+              </div>
+            ) : (
+              <Link
+                to="/login"
+                onClick={() => setMenuOpen(false)}
+                className="mt-3 flex items-center justify-center gap-2 rounded-card border border-pb-green py-2.5 text-sm font-semibold text-pb-green"
+              >
+                Log In
+              </Link>
+            )}
           </nav>
         </div>
       )}

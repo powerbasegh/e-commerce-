@@ -790,3 +790,28 @@ account should fail safe to empty rather than crashing; test both desktop
 - Real push/email/WhatsApp/SMS notification delivery (only the in-app
   center + message-building exists, per spec)
 - Enforcing the vendor/PowerBase privacy boundary at a backend/API level
+
+## Backend Foundation Added (2026-08)
+
+The repository now includes a real Express/TiDB backend foundation under `server/`.
+It contains JWT authentication, role middleware, customer order APIs, vendor-scoped order APIs, admin delivery-fee management, notifications, a TiDB-compatible relational schema, and a small seed catalog matching the existing mock storefront product IDs.
+
+Important: this project does not include real TiDB credentials. Set them in `server/.env` from `.env.example` before expecting database-backed checkout/order operations to work. The existing customer UI remains intentionally preserved; full customer login/registration UI and payment-provider integration are separate production phases.
+
+## Backend Integration Hardening (2026-08)
+
+This version adds and hardens the backend foundation without redesigning the existing storefront UI.
+
+### Added / fixed
+- Customer address API: GET/POST/PUT/DELETE plus explicit set-default endpoint, all scoped to the authenticated user.
+- Notification API: list, mark one read, and mark all read, all scoped to the authenticated user.
+- Database health endpoint: `GET /api/health/db` performs a real `SELECT 1` when database credentials are configured and returns only a safe status.
+- Admin delivery-fee validation now treats `SET`, `WAIVED`, and `CANCELLED` differently; `SET` requires a valid non-negative fee, `WAIVED` becomes zero, and `CANCELLED` does not require a normal fee value.
+- Public order tracking returns only safe order-level tracking/financial fields and order events; it does not return customer phone, address, or GPS coordinates.
+- API service now exposes address, notification-read, and database-health methods.
+
+### Important verification boundary
+The current repository still contains the original frontend-first `AccountContext` and local order storage used by the existing UI. The backend APIs above are ready, but this pass does not claim that every account/profile/address/notification screen has been migrated from local state to the backend.
+
+### TiDB status
+The database connection is **not live-tested** until valid TiDB Cloud credentials are supplied in `server/.env`. The health endpoint is the intended safe check after credentials are configured.

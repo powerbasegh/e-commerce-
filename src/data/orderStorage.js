@@ -1,5 +1,5 @@
 // ---------------------------------------------------------------------------
-// Order persistence (frontend-only stage)
+// Legacy local order persistence fallback
 // ---------------------------------------------------------------------------
 // No backend/order API exists yet, so placed orders are mirrored to
 // localStorage under ORDERS_STORAGE_KEY — same pattern as the cart's own

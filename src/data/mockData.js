@@ -511,5 +511,9 @@ export async function getRelatedProducts(product, limit = 6) {
 }
 
 export function formatGHS(amount) {
+  // Guest order tracking (public API, no auth) deliberately omits some
+  // financial fields for privacy/scope reasons — render those as "—"
+  // instead of throwing on null.toFixed().
+  if (amount == null || Number.isNaN(amount)) return '—'
   return `GH₵${amount.toFixed(2)}`
 }

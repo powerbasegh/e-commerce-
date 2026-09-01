@@ -4,6 +4,7 @@ import Icon from './Icon.jsx'
 import { currentUser } from '../data/mockData.js'
 import { useCart } from '../context/CartContext.jsx'
 import { useAccount } from '../context/AccountContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
@@ -22,7 +23,8 @@ export default function Header({ activePath = '/' }) {
   // read, since a real (if still frontend-only) notification center now
   // exists at /account/notifications.
   const { profile, unreadNotificationCount } = useAccount()
-  const displayName = profile.fullName || currentUser.name
+  const { isAuthenticated, user, logout } = useAuth()
+  const displayName = user?.fullName || profile.fullName || currentUser.name
 
   return (
     <header className="hidden border-b border-pb-gray-border bg-white lg:block">
@@ -116,6 +118,20 @@ export default function Header({ activePath = '/' }) {
               </span>
             </span>
           </Link>
+
+          {isAuthenticated ? (
+            <button
+              type="button"
+              onClick={logout}
+              className="shrink-0 text-xs font-medium text-pb-gray-muted hover:text-pb-red"
+            >
+              Log Out
+            </button>
+          ) : (
+            <Link to="/login" className="shrink-0 text-xs font-semibold text-pb-green hover:underline">
+              Log In
+            </Link>
+          )}
         </div>
       </div>
     </header>

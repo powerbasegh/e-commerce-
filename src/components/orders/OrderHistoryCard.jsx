@@ -12,8 +12,12 @@ function formatOrderDate(isoString) {
 }
 
 export default function OrderHistoryCard({ order }) {
-  const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0)
-  const vendorCount = order.vendorGroups.length
+  // Backend order-history rows (adaptOrderSummary) carry pre-computed
+  // itemCount/vendorCount instead of full items/vendorGroups arrays — fall
+  // back to deriving them for locally-stored guest orders, which still
+  // carry the full arrays.
+  const itemCount = order.itemCount ?? order.items.reduce((sum, item) => sum + item.quantity, 0)
+  const vendorCount = order.vendorCount ?? order.vendorGroups.length
   const { amountDueNow, deliveryFee } = computeOrderFinancials(order)
 
   return (

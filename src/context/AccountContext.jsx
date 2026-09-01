@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useReducer } from 'react'
+import { createContext, useContext, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import {
   createDefaultAccountState,
   createEmptyAddress,
@@ -7,11 +7,14 @@ import {
 } from '../data/accountModels.js'
 import { createDefaultSettings } from '../data/accountModels.js'
 import { getOrders } from '../data/orderStorage.js'
+import { useAuth } from './AuthContext.jsx'
+import { api } from '../services/api.js'
+import { adaptApiAddress, adaptApiNotification } from '../data/orderApiAdapter.js'
 
 // ---------------------------------------------------------------------------
 // Customer Account & Profile — frontend-first, backend-ready
 // ---------------------------------------------------------------------------
-// Authentication and a backend customer-profile API don't exist yet, so this
+// The account UI remains locally resilient while backend authentication/profile APIs are integrated, so this
 // is the single source of truth for account data on this device, mirroring
 // the same pattern as src/context/CartContext.jsx: a reducer + localStorage
 // persistence, wrapped in a hook every account page/component consumes.
@@ -163,6 +166,30 @@ function accountReducer(state, action) {
     case 'MARK_ALL_NOTIFICATIONS_READ':
       return { ...state, notifications: state.notifications.map((n) => ({ ...n, read: true })) }
 
+    // Replaces addresses/notifications with the authenticated customer's
+    // real backend data (fetched on login — see AccountProvider's effect
+    // below). Profile/settings are left alone: there's no backend
+    // update-profile endpoint yet, and settings are still frontend-only by
+    // design, so those two stay locally persisted even when logged in.
+    // Fired on logout, after a session that was synced with the backend.
+    // Clears addresses/notifications rather than leaving the previous
+    // account's data visible (and persisted to this device's localStorage)
+    // to whoever uses the browser next — a real customer-isolation concern,
+    // not just cosmetic. Profile/settings are cleared too, for the same
+    // reason: they may have been seeded from that account.
+    case 'RESET_ACCOUNT':
+      return createDefaultAccountState()
+
+    case 'HYDRATE_FROM_API':
+      // Payload may include just one of addresses/notifications (address
+      // CRUD actions only refetch addresses) — only replace what's given,
+      // never wipe the other field to an empty array by omission.
+      return {
+        ...state,
+        addresses: action.payload.addresses ?? state.addresses,
+        notifications: action.payload.notifications ?? state.notifications,
+      }
+
     default:
       return state
   }
@@ -170,29 +197,149 @@ function accountReducer(state, action) {
 
 export function AccountProvider({ children }) {
   const [state, dispatch] = useReducer(accountReducer, undefined, loadPersistedAccount)
+  const { isAuthenticated, user } = useAuth()
+  // Tracks whether addresses/notifications currently reflect the backend
+  // (true) or local guest storage (false) — CRUD actions below branch on
+  // this so a guest's flow is completely unchanged.
+  const [syncedWithApi, setSyncedWithApi] = useState(false)
+  // Tracks whether the *previous* render was authenticated, so the reset
+  // below only fires on an actual login->logout transition — never on
+  // first mount for a guest who was never logged in (that would wipe their
+  // legitimate local guest data for no reason).
+  const wasAuthenticated = useRef(false)
 
   useEffect(() => {
     persistAccount(state)
   }, [state])
 
+  // On login, pull the customer's real addresses/notifications from the
+  // backend and replace whatever was in local storage — a logged-in
+  // customer's data should come from their account, not this device's
+  // guest cache. On logout, clear that account's data (see RESET_ACCOUNT)
+  // rather than leaving it visible to whoever uses the browser next.
+  useEffect(() => {
+    let cancelled = false
+    if (!isAuthenticated) {
+      setSyncedWithApi(false)
+      if (wasAuthenticated.current) {
+        dispatch({ type: 'RESET_ACCOUNT' })
+      }
+      wasAuthenticated.current = false
+      return
+    }
+    wasAuthenticated.current = true
+    Promise.all([api.getAddresses(), api.getNotifications()])
+      .then(([addrData, notifData]) => {
+        if (cancelled) return
+        dispatch({
+          type: 'HYDRATE_FROM_API',
+          payload: {
+            addresses: (addrData.addresses || []).map(adaptApiAddress),
+            notifications: (notifData.notifications || []).map(adaptApiNotification),
+          },
+        })
+        setSyncedWithApi(true)
+      })
+      .catch(() => {
+        // Leave whatever was already in state (likely stale/empty) rather
+        // than blocking the UI — CRUD actions still gate on syncedWithApi,
+        // so if this failed we simply stay in local mode for this session.
+        setSyncedWithApi(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [isAuthenticated])
+
+  // Once logged in, if no local profile has ever been saved, seed the
+  // editable profile form from the authenticated user's real account
+  // fields — never overwrites a profile the customer already has.
+  useEffect(() => {
+    if (isAuthenticated && user && !state.profile.fullName && !state.profile.email) {
+      dispatch({
+        type: 'UPDATE_PROFILE',
+        payload: { fullName: user.fullName || '', email: user.email || '', phone: user.phone || '' },
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, user])
+
   const actions = useMemo(
     () => ({
+      // No backend profile-update endpoint exists yet (only GET
+      // /auth/profile) — profile editing stays local-only for now, exactly
+      // as before, even when logged in. See PROJECT_NOTES.md.
       updateProfile: (fields) => dispatch({ type: 'UPDATE_PROFILE', payload: fields }),
 
-      addAddress: (fields) =>
-        dispatch({ type: 'ADD_ADDRESS', payload: { ...createEmptyAddress(), ...fields } }),
+      async addAddress(fields) {
+        if (isAuthenticated && syncedWithApi) {
+          await api.createAddress({
+            label: fields.label,
+            full_address: fields.fullAddress,
+            city: fields.city,
+            area: fields.area,
+            landmark: fields.landmark,
+            delivery_instructions: fields.deliveryInstructions,
+            latitude: fields.latitude,
+            longitude: fields.longitude,
+            is_default: fields.isDefault,
+          })
+          const data = await api.getAddresses()
+          dispatch({ type: 'HYDRATE_FROM_API', payload: { addresses: data.addresses.map(adaptApiAddress) } })
+          return
+        }
+        dispatch({ type: 'ADD_ADDRESS', payload: { ...createEmptyAddress(), ...fields } })
+      },
 
-      updateAddress: (id, updates) => dispatch({ type: 'UPDATE_ADDRESS', payload: { id, updates } }),
+      async updateAddress(id, updates) {
+        if (isAuthenticated && syncedWithApi) {
+          const current = state.addresses.find((a) => a.id === id)
+          await api.updateAddress(id, {
+            label: updates.label ?? current?.label,
+            full_address: updates.fullAddress ?? current?.fullAddress,
+            city: updates.city ?? current?.city,
+            area: updates.area ?? current?.area,
+            landmark: updates.landmark ?? current?.landmark,
+            delivery_instructions: updates.deliveryInstructions ?? current?.deliveryInstructions,
+            latitude: updates.latitude ?? current?.latitude,
+            longitude: updates.longitude ?? current?.longitude,
+            is_default: updates.isDefault ?? current?.isDefault,
+          })
+          const data = await api.getAddresses()
+          dispatch({ type: 'HYDRATE_FROM_API', payload: { addresses: data.addresses.map(adaptApiAddress) } })
+          return
+        }
+        dispatch({ type: 'UPDATE_ADDRESS', payload: { id, updates } })
+      },
 
-      deleteAddress: (id) => dispatch({ type: 'DELETE_ADDRESS', payload: { id } }),
+      async deleteAddress(id) {
+        if (isAuthenticated && syncedWithApi) {
+          await api.deleteAddress(id)
+          const data = await api.getAddresses()
+          dispatch({ type: 'HYDRATE_FROM_API', payload: { addresses: data.addresses.map(adaptApiAddress) } })
+          return
+        }
+        dispatch({ type: 'DELETE_ADDRESS', payload: { id } })
+      },
 
-      setDefaultAddress: (id) => dispatch({ type: 'SET_DEFAULT_ADDRESS', payload: { id } }),
+      async setDefaultAddress(id) {
+        if (isAuthenticated && syncedWithApi) {
+          await api.setDefaultAddress(id)
+          const data = await api.getAddresses()
+          dispatch({ type: 'HYDRATE_FROM_API', payload: { addresses: data.addresses.map(adaptApiAddress) } })
+          return
+        }
+        dispatch({ type: 'SET_DEFAULT_ADDRESS', payload: { id } })
+      },
 
       updateSettings: (fields) => dispatch({ type: 'UPDATE_SETTINGS', payload: fields }),
 
       // Internal-use action: called from real events only (e.g. Checkout
-      // placing an order). Never called to generate fake/random
-      // notifications — see PROJECT_NOTES.md for that constraint.
+      // placing an order for a guest). Never called to generate
+      // fake/random notifications — see PROJECT_NOTES.md for that
+      // constraint. When logged in, the backend creates the equivalent
+      // notification itself (see server orderController.createOrder /
+      // adminController.updateDeliveryFee), so this is guest-only.
       addNotification: ({ type, title, message }) =>
         dispatch({
           type: 'ADD_NOTIFICATION',
@@ -206,11 +353,36 @@ export function AccountProvider({ children }) {
           },
         }),
 
-      markNotificationRead: (id) => dispatch({ type: 'MARK_NOTIFICATION_READ', payload: { id } }),
+      async markNotificationRead(id) {
+        if (isAuthenticated && syncedWithApi) {
+          await api.markNotificationRead(id)
+        }
+        dispatch({ type: 'MARK_NOTIFICATION_READ', payload: { id } })
+      },
 
-      markAllNotificationsRead: () => dispatch({ type: 'MARK_ALL_NOTIFICATIONS_READ' }),
+      async markAllNotificationsRead() {
+        if (isAuthenticated && syncedWithApi) {
+          await api.markAllNotificationsRead()
+        }
+        dispatch({ type: 'MARK_ALL_NOTIFICATIONS_READ' })
+      },
+
+      // Re-fetches addresses/notifications from the backend on demand
+      // (e.g. after Checkout places an authenticated order, to pick up the
+      // order-received notification the backend just created).
+      async refreshFromApi() {
+        if (!isAuthenticated) return
+        const [addrData, notifData] = await Promise.all([api.getAddresses(), api.getNotifications()])
+        dispatch({
+          type: 'HYDRATE_FROM_API',
+          payload: {
+            addresses: addrData.addresses.map(adaptApiAddress),
+            notifications: notifData.notifications.map(adaptApiNotification),
+          },
+        })
+      },
     }),
-    [],
+    [isAuthenticated, syncedWithApi, state.addresses],
   )
 
   return (
