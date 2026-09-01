@@ -35,8 +35,3 @@ input:focus-visible {
 ::selection { background: rgba(27,122,61,.16); color: #0F4C24; }
 button, a { -webkit-tap-highlight-color: transparent; }
 img { max-width: 100%; }
-
-/* Desktop storefront rhythm */
-@media (min-width: 1536px) {
-  .xl\:grid { align-items: start; }
-}
