@@ -48,6 +48,7 @@ export function adaptOrderSummary(row) {
     createdAt: row.created_at,
     status: row.status,
     itemCount: Number(row.item_count) || 0,
+    vendorCount: Number(row.vendor_count) || 0,
     items: [], // summary rows don't carry line items — itemCount covers the card's needs
     vendorGroups: [],
     pricing: { subtotal, platformFee, amountDueNow: subtotal + platformFee },
@@ -60,14 +61,22 @@ export function adaptOrderDetails({ order, items, events, delivery }) {
   const subtotal = Number(order.subtotal)
   const platformFee = Number(order.platform_fee)
 
-  const customerItems = items.map((item) => ({
-    productId: item.product_id,
-    productName: item.product_name,
-    productImage: item.image_url || '/products/placeholder.svg',
-    price: Number(item.unit_price),
-    quantity: Number(item.quantity),
+  const groups = new Map()
+  for (const item of items) {
+    const key = String(item.vendor_id)
+    if (!groups.has(key)) groups.set(key, { vendor: { id: key, name: item.store_name }, items: [] })
+    groups.get(key).items.push({
+      productId: item.product_id,
+      productName: item.product_name,
+      productImage: item.image_url || '/products/placeholder.svg',
+      price: Number(item.unit_price),
+      quantity: item.quantity,
+    })
+  }
+  const vendorGroups = Array.from(groups.values()).map((g) => ({
+    ...g,
+    subtotal: g.items.reduce((sum, i) => sum + i.price * i.quantity, 0),
   }))
-  const vendorGroups = customerItems.length ? [{ vendor: { id: 'powerbase', name: 'PowerBase' }, items: customerItems, subtotal: customerItems.reduce((sum, i) => sum + i.price * i.quantity, 0) }] : []
 
   return {
     id: String(order.id),

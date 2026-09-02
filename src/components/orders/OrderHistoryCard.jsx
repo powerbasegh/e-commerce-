@@ -17,6 +17,7 @@ export default function OrderHistoryCard({ order }) {
   // back to deriving them for locally-stored guest orders, which still
   // carry the full arrays.
   const itemCount = order.itemCount ?? order.items.reduce((sum, item) => sum + item.quantity, 0)
+  const vendorCount = order.vendorCount ?? order.vendorGroups.length
   const { amountDueNow, deliveryFee } = computeOrderFinancials(order)
 
   return (
@@ -30,7 +31,7 @@ export default function OrderHistoryCard({ order }) {
       </div>
 
       <p className="text-xs text-pb-gray-muted">
-        {itemCount} {itemCount === 1 ? 'Item' : 'Items'} • PowerBase Order
+        {itemCount} {itemCount === 1 ? 'Item' : 'Items'} • {vendorCount} {vendorCount === 1 ? 'Store' : 'Stores'}
       </p>
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-pb-gray-border pt-3">

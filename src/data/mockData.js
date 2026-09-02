@@ -43,7 +43,7 @@ export const heroSlides = [
   {
     id: 1,
     eyebrow: null,
-    title: ['Everything you need,', 'from PowerBase', 'delivered to you.'],
+    title: ['Everything you need,', 'from trusted vendors', 'delivered to you.'],
     ctaLabel: 'Shop Now',
     ctaHref: '/shop',
     image: '/hero-delivery.svg',
@@ -54,7 +54,7 @@ export const trustFeatures = [
   { id: 'secure-payments', label: 'Secure Payments', icon: 'secure' },
   { id: 'buyer-protection', label: 'Buyer Protection', icon: 'shield' },
   { id: 'reliable-delivery', label: 'Reliable Delivery', icon: 'delivery' },
-  { id: 'powerbase-support', label: 'PowerBase Support', icon: 'support' },
+  { id: 'top-vendors', label: 'Top Vendors', icon: 'vendors' },
 ]
 
 export const trustSection = [
@@ -77,10 +77,10 @@ export const trustSection = [
     description: 'Fast & affordable delivery to your doorstep',
   },
   {
-    id: 'powerbase-support',
-    icon: 'support',
-    title: 'PowerBase Support',
-    description: 'One team for your order',
+    id: 'top-vendors',
+    icon: 'vendors',
+    title: 'Top Vendors',
+    description: 'Verified & trusted sellers',
   },
   {
     id: 'support',
@@ -102,18 +102,18 @@ export const trustSectionShort = [
 export const buyerProtectionFeatures = [
   { id: 'secure-payments', icon: 'secure', title: 'Secure Payments', description: 'Your payment info is encrypted and protected' },
   { id: 'buyer-protection', icon: 'shield', title: 'Buyer Protection', description: 'Full refund if the item is not as described' },
-  { id: 'powerbase-checked', icon: 'shield', title: 'PowerBase Checked', description: 'Products are reviewed before they reach you' },
+  { id: 'verified-vendors', icon: 'vendors', title: 'Verified Vendors', description: 'This vendor has been reviewed by PowerBase' },
   { id: 'reliable-delivery', icon: 'delivery', title: 'Reliable Delivery', description: 'Tracked delivery to your doorstep' },
 ]
 
 export const promoCards = [
   {
-    id: 'powerbase-service',
-    icon: 'support',
-    title: 'PowerBase Service',
-    text: 'One place to shop, pay and get support',
-    ctaLabel: 'Shop Now',
-    ctaHref: '/shop',
+    id: 'top-vendors',
+    icon: 'vendors',
+    title: 'Top Vendors',
+    text: 'Shop from trusted vendors',
+    ctaLabel: 'View Vendors',
+    ctaHref: '/vendors',
     tone: 'green',
   },
   {
