@@ -1,0 +1,39 @@
+-- PowerBase commercial settlement model.
+-- Customer pays PowerBase; vendor share and PowerBase margin are tracked internally.
+ALTER TABLE vendors ADD COLUMN IF NOT EXISTS default_share_percent DECIMAL(5,2) NOT NULL DEFAULT 80.00;
+ALTER TABLE products ADD COLUMN IF NOT EXISTS vendor_share_percent DECIMAL(5,2) NULL;
+
+CREATE TABLE IF NOT EXISTS payments (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  order_id BIGINT UNSIGNED NOT NULL UNIQUE,
+  provider VARCHAR(40) NOT NULL DEFAULT 'PENDING',
+  transaction_reference VARCHAR(160) NULL UNIQUE,
+  amount DECIMAL(12,2) NOT NULL,
+  status ENUM('PENDING','INITIATED','PAID','FAILED','CANCELLED','REFUNDED') NOT NULL DEFAULT 'PENDING',
+  paid_at TIMESTAMP NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS vendor_settlements (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  order_id BIGINT UNSIGNED NOT NULL,
+  vendor_order_id BIGINT UNSIGNED NOT NULL UNIQUE,
+  vendor_id BIGINT UNSIGNED NOT NULL,
+  vendor_gross DECIMAL(12,2) NOT NULL,
+  powerbase_margin DECIMAL(12,2) NOT NULL,
+  status ENUM('PENDING','ELIGIBLE','PROCESSING','PAID','HELD','CANCELLED') NOT NULL DEFAULT 'PENDING',
+  payout_reference VARCHAR(160) NULL UNIQUE,
+  eligible_at TIMESTAMP NULL,
+  paid_at TIMESTAMP NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  FOREIGN KEY (vendor_order_id) REFERENCES vendor_orders(id) ON DELETE CASCADE,
+  FOREIGN KEY (vendor_id) REFERENCES vendors(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_payments_status ON payments(status);
+CREATE INDEX IF NOT EXISTS idx_settlements_vendor_status ON vendor_settlements(vendor_id,status);
+CREATE INDEX IF NOT EXISTS idx_settlements_order ON vendor_settlements(order_id);

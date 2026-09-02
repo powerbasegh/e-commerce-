@@ -198,25 +198,18 @@ export function useCart() {
 }
 
 /**
- * Groups cart items by vendor for the multi-vendor cart display. PowerBase
- * supports one cart with products from several vendors, grouped visually —
- * never split into separate per-vendor checkout pages.
+/**
+ * Customer-facing grouping. PowerBase may fulfill one order through several
+ * internal vendors, but the customer sees one PowerBase order/cart. Vendor
+ * IDs remain in the cart only as an internal fulfillment hint.
  */
 export function groupItemsByVendor(items) {
-  const groups = new Map()
-
-  for (const item of items) {
-    const key = item.vendor.id
-    if (!groups.has(key)) {
-      groups.set(key, { vendor: item.vendor, items: [] })
-    }
-    groups.get(key).items.push(item)
-  }
-
-  return Array.from(groups.values()).map((group) => ({
-    ...group,
-    subtotal: group.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
-  }))
+  if (!items.length) return []
+  return [{
+    vendor: { id: 'powerbase', name: 'PowerBase' },
+    items,
+    subtotal: items.reduce((sum, item) => sum + item.price * item.quantity, 0),
+  }]
 }
 
 /**

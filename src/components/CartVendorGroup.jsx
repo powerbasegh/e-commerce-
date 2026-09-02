@@ -7,8 +7,8 @@ export default function CartVendorGroup({ group, onIncrement, onDecrement, onRem
     <section className="rounded-card border border-pb-gray-border bg-white shadow-card">
       <header className="flex items-center justify-between border-b border-pb-gray-border px-4 py-3">
         <div className="flex items-center gap-2">
-          <Icon name="vendors" size={15} className="text-pb-green" />
-          <span className="text-sm font-semibold text-pb-gray-text">{group.vendor.name}</span>
+          <Icon name="shield" size={15} className="text-pb-green" />
+          <span className="text-sm font-semibold text-pb-gray-text">PowerBase Order</span>
         </div>
         <span className="text-xs text-pb-gray-muted">{formatGHS(group.subtotal)}</span>
       </header>

@@ -1,11 +1,11 @@
 INSERT IGNORE INTO categories (id,name) VALUES
 ('electronics','Electronics'),('fashion','Fashion'),('home-living','Home & Living');
 
-INSERT IGNORE INTO vendors (id,store_name,rating,location,verified) VALUES
-(1,'TechNova Store',4.70,'Accra, Ghana',1),
-(2,'StrideWalk Footwear',4.60,'Kumasi, Ghana',1),
-(3,'Home & Co.',4.50,'Accra, Ghana',1),
-(4,'Urban Pack Gear',4.40,'Tema, Ghana',0);
+INSERT IGNORE INTO vendors (id,store_name,rating,location,verified,default_share_percent) VALUES
+(1,'TechNova Store',4.70,'Accra, Ghana',1,80.00),
+(2,'StrideWalk Footwear',4.60,'Kumasi, Ghana',1,80.00),
+(3,'Home & Co.',4.50,'Accra, Ghana',1,80.00),
+(4,'Urban Pack Gear',4.40,'Tema, Ghana',0,80.00);
 
 INSERT IGNORE INTO products (id,vendor_id,category_id,name,price,old_price,stock_quantity,image_url,description) VALUES
 ('fd-1',1,'electronics','Bluetooth Speaker',180,240,24,'/products/speaker.svg','A compact Bluetooth speaker with rich bass and up to 10 hours of playtime.'),

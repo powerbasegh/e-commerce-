@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import Header from '../components/Header.jsx'
 import Sidebar from '../components/Sidebar.jsx'
 import Hero from '../components/Hero.jsx'
+import SavingsCard from '../components/SavingsCard.jsx'
 import ProductSection from '../components/ProductSection.jsx'
 import PromoCards from '../components/PromoCards.jsx'
 import TrustSection from '../components/TrustSection.jsx'
-import CartPanel from '../components/CartPanel.jsx'
+import PopularCategories from '../components/PopularCategories.jsx'
 import MobileHeader from '../components/MobileHeader.jsx'
 import MobileSearch from '../components/MobileSearch.jsx'
 import MobileCategoryRow from '../components/MobileCategoryRow.jsx'
@@ -19,33 +20,29 @@ export default function HomePage() {
 
   useEffect(() => {
     let cancelled = false
-
     Promise.all([getFlashDeals(), getRecommendedProducts()]).then(([deals, recs]) => {
       if (cancelled) return
       setFlashDeals(deals)
       setRecommended(recs)
       setLoading(false)
     })
-
-    return () => {
-      cancelled = true
-    }
+    return () => { cancelled = true }
   }, [])
-
-  const notificationCount = 3
 
   return (
     <div className="min-h-screen bg-pb-gray-bg">
-      {/* ------------------------------------------------------------------ */}
-      {/* Desktop layout: Sidebar + Main content + Cart panel                */}
-      {/* ------------------------------------------------------------------ */}
-      <Header notificationCount={notificationCount} activePath="/" />
+      <Header activePath="/" />
 
-      <div className="mx-auto hidden max-w-[1400px] gap-6 px-6 py-6 lg:flex">
+      <div className="mx-auto hidden max-w-[1480px] gap-5 px-5 py-5 xl:flex">
         <Sidebar />
 
-        <main className="flex min-w-0 flex-1 flex-col gap-6">
-          <Hero variant="desktop" />
+        <main className="flex min-w-0 flex-1 flex-col gap-5">
+          <div className="flex gap-5">
+            <div className="min-w-0 flex-1">
+              <Hero variant="desktop" />
+            </div>
+            <SavingsCard />
+          </div>
 
           {loading ? (
             <SectionSkeleton />
@@ -58,6 +55,7 @@ export default function HomePage() {
                 countdownSeconds={flashDealsEndsInSeconds}
                 variant="desktop"
               />
+              <PopularCategories />
               <ProductSection
                 title="Recommended for you"
                 products={recommended}
@@ -70,46 +68,25 @@ export default function HomePage() {
           <PromoCards variant="desktop" />
           <TrustSection variant="desktop" />
         </main>
-
-        <CartPanel />
       </div>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Mobile layout: Header + Search + Hero + Categories + Sections +    */}
-      {/* Promotions + Trust + Fixed bottom nav. Not a shrunk desktop copy.  */}
-      {/* ------------------------------------------------------------------ */}
-      <div className="lg:hidden">
-        <MobileHeader notificationCount={notificationCount} />
-
+      <div className="xl:hidden">
+        <MobileHeader />
         <main className="flex flex-col gap-5 px-4 pb-24 pt-3">
           <MobileSearch />
           <Hero variant="mobile" />
           <MobileCategoryRow />
-
-          {loading ? (
-            <SectionSkeleton />
-          ) : (
+          {loading ? <SectionSkeleton /> : (
             <>
-              <ProductSection
-                title="Flash Deals"
-                products={flashDeals}
-                viewAllHref="/flash-deals"
-                countdownSeconds={flashDealsEndsInSeconds}
-                variant="mobile"
-              />
-              <ProductSection
-                title="Recommended for you"
-                products={recommended}
-                viewAllHref="/recommended"
-                variant="mobile"
-              />
+              <ProductSection title="Flash Deals" products={flashDeals} viewAllHref="/flash-deals"
+                countdownSeconds={flashDealsEndsInSeconds} variant="mobile" />
+              <PopularCategories />
+              <ProductSection title="Recommended for you" products={recommended} viewAllHref="/recommended" variant="mobile" />
             </>
           )}
-
           <PromoCards variant="mobile" />
           <TrustSection variant="mobile" />
         </main>
-
         <BottomNav activeId="home" />
       </div>
     </div>
@@ -122,7 +99,7 @@ function SectionSkeleton() {
       <div className="h-5 w-40 rounded bg-pb-gray-border" />
       <div className="flex gap-3 overflow-hidden">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-48 w-40 shrink-0 rounded-card bg-pb-gray-border" />
+          <div key={i} className="h-52 flex-1 rounded-card bg-pb-gray-border" />
         ))}
       </div>
     </div>

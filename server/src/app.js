@@ -12,6 +12,6 @@ app.use(helmet()); app.use(cors({origin:(origin,cb)=>{ if(!origin||allowedOrigin
 async function healthCheck(req,res){try{await db.query('SELECT 1');res.json({status:'ok',database:'connected'});}catch(e){res.status(503).json({status:'degraded',database:'unavailable'});}}
 app.get('/api/health',healthCheck);
 app.get('/api/health/db',healthCheck);
-app.use('/api/auth',require('./routes/authRoutes')); app.use('/api/orders',require('./routes/orderRoutes')); app.use('/api/admin',require('./routes/adminRoutes')); app.use('/api/addresses',require('./routes/addressRoutes')); app.use('/api/notifications',require('./routes/notificationRoutes'));
+app.use('/api/auth',require('./routes/authRoutes')); app.use('/api/payments',require('./routes/paymentRoutes')); app.use('/api/orders',require('./routes/orderRoutes')); app.use('/api/admin',require('./routes/adminRoutes')); app.use('/api/addresses',require('./routes/addressRoutes')); app.use('/api/notifications',require('./routes/notificationRoutes'));
 app.use((err,req,res,next)=>{console.error(err);res.status(err.status||500).json({message:err.status?err.message:'Internal server error'});});
 module.exports=app;

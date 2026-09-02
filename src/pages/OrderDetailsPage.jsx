@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Header from '../components/Header.jsx'
 import MobileHeader from '../components/MobileHeader.jsx'
@@ -11,6 +12,9 @@ import OrderDeliveryInfo from '../components/orders/OrderDeliveryInfo.jsx'
 import OrderActivity from '../components/orders/OrderActivity.jsx'
 import OrderActions from '../components/orders/OrderActions.jsx'
 import { getOrderByNumber } from '../data/orderStorage.js'
+import { useAuth } from '../context/AuthContext.jsx'
+import { api } from '../services/api.js'
+import { adaptOrderDetails } from '../data/orderApiAdapter.js'
 import { ORDER_STATUS_DESCRIPTION } from '../constants/orderStatus.js'
 
 function formatOrderDate(isoString) {
@@ -23,7 +27,39 @@ function formatOrderDate(isoString) {
 
 export default function OrderDetailsPage() {
   const { orderNumber } = useParams()
-  const order = getOrderByNumber(orderNumber)
+  const { isAuthenticated } = useAuth()
+  const [order, setOrder] = useState(() => (isAuthenticated ? null : getOrderByNumber(orderNumber)))
+  const [loading, setLoading] = useState(isAuthenticated)
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setOrder(getOrderByNumber(orderNumber))
+      setLoading(false)
+      return
+    }
+    let cancelled = false
+    setLoading(true)
+    api.getOrderByNumber(orderNumber)
+      .then((data) => {
+        if (!cancelled) setOrder(adaptOrderDetails(data))
+      })
+      .catch(() => {
+        if (!cancelled) setOrder(null)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => { cancelled = true }
+  }, [isAuthenticated, orderNumber])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-pb-gray-bg">
+        <Header notificationCount={3} activePath="" />
+        <div className="mx-auto max-w-[1400px] px-6 py-10 text-sm text-pb-gray-muted">Loading your order…</div>
+      </div>
+    )
+  }
 
   if (!order) {
     return (
