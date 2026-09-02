@@ -1,14 +1,11 @@
 import { useEffect, useState } from 'react'
 import Header from '../components/Header.jsx'
-import CategorySidebar from '../components/CategorySidebar.jsx'
-import HeroSection from '../components/HeroSection.jsx'
-import PromoCard from '../components/PromoCard.jsx'
-import FlashDeals from '../components/FlashDeals.jsx'
-import RecommendedProducts from '../components/RecommendedProducts.jsx'
+import Sidebar from '../components/Sidebar.jsx'
+import Hero from '../components/Hero.jsx'
+import ProductSection from '../components/ProductSection.jsx'
 import PromoCards from '../components/PromoCards.jsx'
-import TrustBenefits from '../components/TrustBenefits.jsx'
-import CategoryShowcase from '../components/CategoryShowcase.jsx'
-import Footer from '../components/Footer.jsx'
+import TrustSection from '../components/TrustSection.jsx'
+import CartPanel from '../components/CartPanel.jsx'
 import MobileHeader from '../components/MobileHeader.jsx'
 import MobileSearch from '../components/MobileSearch.jsx'
 import MobileCategoryRow from '../components/MobileCategoryRow.jsx'
@@ -22,71 +19,98 @@ export default function HomePage() {
 
   useEffect(() => {
     let cancelled = false
+
     Promise.all([getFlashDeals(), getRecommendedProducts()]).then(([deals, recs]) => {
       if (cancelled) return
       setFlashDeals(deals)
       setRecommended(recs)
       setLoading(false)
     })
-    return () => { cancelled = true }
+
+    return () => {
+      cancelled = true
+    }
   }, [])
+
+  const notificationCount = 3
 
   return (
     <div className="min-h-screen bg-pb-gray-bg">
-      <Header activePath="/" />
+      {/* ------------------------------------------------------------------ */}
+      {/* Desktop layout: Sidebar + Main content + Cart panel                */}
+      {/* ------------------------------------------------------------------ */}
+      <Header notificationCount={notificationCount} activePath="/" />
 
-      {/* Desktop layout: CategorySidebar | main content, max-width container
-          centered for 1366 / 1440 / 1536px screens. */}
-      <div className="mx-auto hidden max-w-[1480px] gap-5 px-5 py-5 xl:flex">
-        <CategorySidebar />
+      <div className="mx-auto hidden max-w-[1400px] gap-6 px-6 py-6 lg:flex">
+        <Sidebar />
 
         <main className="flex min-w-0 flex-1 flex-col gap-6">
-          <div className="flex gap-5">
-            <div className="min-w-0 flex-1">
-              <HeroSection variant="desktop" />
-            </div>
-            <PromoCard />
-          </div>
+          <Hero variant="desktop" />
 
           {loading ? (
             <SectionSkeleton />
           ) : (
             <>
-              <FlashDeals products={flashDeals} countdownSeconds={flashDealsEndsInSeconds} variant="desktop" />
-              <CategoryShowcase />
-              <RecommendedProducts products={recommended} variant="desktop" />
+              <ProductSection
+                title="Flash Deals"
+                products={flashDeals}
+                viewAllHref="/flash-deals"
+                countdownSeconds={flashDealsEndsInSeconds}
+                variant="desktop"
+              />
+              <ProductSection
+                title="Recommended for you"
+                products={recommended}
+                viewAllHref="/recommended"
+                variant="desktop"
+              />
             </>
           )}
 
           <PromoCards variant="desktop" />
-          <TrustBenefits variant="desktop" />
+          <TrustSection variant="desktop" />
         </main>
+
+        <CartPanel />
       </div>
 
-      {/* Mobile / tablet layout */}
-      <div className="xl:hidden">
-        <MobileHeader />
+      {/* ------------------------------------------------------------------ */}
+      {/* Mobile layout: Header + Search + Hero + Categories + Sections +    */}
+      {/* Promotions + Trust + Fixed bottom nav. Not a shrunk desktop copy.  */}
+      {/* ------------------------------------------------------------------ */}
+      <div className="lg:hidden">
+        <MobileHeader notificationCount={notificationCount} />
+
         <main className="flex flex-col gap-5 px-4 pb-24 pt-3">
           <MobileSearch />
-          <HeroSection variant="mobile" />
+          <Hero variant="mobile" />
           <MobileCategoryRow />
+
           {loading ? (
             <SectionSkeleton />
           ) : (
             <>
-              <FlashDeals products={flashDeals} countdownSeconds={flashDealsEndsInSeconds} variant="mobile" />
-              <CategoryShowcase />
-              <RecommendedProducts products={recommended} variant="mobile" />
+              <ProductSection
+                title="Flash Deals"
+                products={flashDeals}
+                viewAllHref="/flash-deals"
+                countdownSeconds={flashDealsEndsInSeconds}
+                variant="mobile"
+              />
+              <ProductSection
+                title="Recommended for you"
+                products={recommended}
+                viewAllHref="/recommended"
+                variant="mobile"
+              />
             </>
           )}
-          <PromoCards variant="mobile" />
-          <TrustBenefits variant="mobile" />
-        </main>
-        <BottomNav activeId="home" />
-      </div>
 
-      <div className="hidden xl:block">
-        <Footer />
+          <PromoCards variant="mobile" />
+          <TrustSection variant="mobile" />
+        </main>
+
+        <BottomNav activeId="home" />
       </div>
     </div>
   )
@@ -98,7 +122,7 @@ function SectionSkeleton() {
       <div className="h-5 w-40 rounded bg-pb-gray-border" />
       <div className="flex gap-3 overflow-hidden">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-52 flex-1 rounded-card bg-pb-gray-border" />
+          <div key={i} className="h-48 w-40 shrink-0 rounded-card bg-pb-gray-border" />
         ))}
       </div>
     </div>

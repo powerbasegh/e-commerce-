@@ -94,9 +94,6 @@ const paths = {
       <rect x="17" y="13" width="5" height="6" rx="1.5" />
     </>
   ),
-  flash: (
-    <path d="m13 2-9 12h7l-1 8 9-13h-7l1-7Z" />
-  ),
   star: (
     <path d="M12 2.5 15 9l7 1-5 5 1.4 7-6.4-3.5L5.6 22 7 15 2 10l7-1 3-6.5Z" />
   ),
@@ -203,47 +200,10 @@ const paths = {
       <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" />
     </>
   ),
-  tag: (
-    <>
-      <path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3.24L3 3v6.59a2 2 0 0 0 .59 1.41l9.58 9.58a2 2 0 0 0 2.83 0l4.59-4.58a2 2 0 0 0 0-2.83Z" />
-      <circle cx="7.5" cy="7.5" r="1.5" />
-    </>
-  ),
   plus: (
     <>
       <line x1="12" y1="5" x2="12" y2="19" />
       <line x1="5" y1="12" x2="19" y2="12" />
-    </>
-  ),
-  headphones: (
-    <path d="M3 18v-6a9 9 0 0 1 18 0v6M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5ZM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5Z" />
-  ),
-  lock: (
-    <>
-      <rect x="4" y="10" width="16" height="10" rx="2" />
-      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-      <circle cx="12" cy="15" r="1.5" />
-    </>
-  ),
-  truck: (
-    <>
-      <rect x="1" y="6" width="14" height="10" rx="1" />
-      <path d="M15 10h4l3 3v3h-7" />
-      <circle cx="6" cy="18" r="2" />
-      <circle cx="17" cy="18" r="2" />
-    </>
-  ),
-  chevronLeft: <polyline points="15 18 9 12 15 6" />,
-  returns: (
-    <>
-      <path d="M3 12a9 9 0 1 0 3-6.7" />
-      <polyline points="3 3 3 8 8 8" />
-    </>
-  ),
-  award: (
-    <>
-      <circle cx="12" cy="8" r="6" />
-      <path d="M9 13.5 7 22l5-3 5 3-2-8.5" />
     </>
   ),
 }

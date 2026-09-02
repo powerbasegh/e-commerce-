@@ -1,30 +1,46 @@
 import ProductCard from './ProductCard.jsx'
 import CountdownTimer from './CountdownTimer.jsx'
-import Icon from './Icon.jsx'
 
-export default function ProductSection({ title, products, viewAllHref = '/products', countdownSeconds, variant = 'desktop' }) {
+export default function ProductSection({
+  title,
+  products,
+  viewAllHref = '/products',
+  countdownSeconds,
+  variant = 'desktop',
+}) {
   const isMobile = variant === 'mobile'
+
   return (
-    <section aria-labelledby={`section-${title}`} className="min-w-0">
+    <section aria-labelledby={`section-${title}`}>
       <div className="mb-3 flex items-center justify-between">
-        <div className="flex min-w-0 items-center gap-3">
-          <h2 id={`section-${title}`} className="flex items-center gap-2 text-lg font-extrabold text-pb-gray-text">
-            {title === 'Flash Deals' && <Icon name="flash" size={20} className="text-pb-amber" />}
+        <div className="flex items-center gap-2">
+          <h2 id={`section-${title}`} className="text-base font-bold text-pb-gray-text sm:text-lg">
             {title}
           </h2>
           {typeof countdownSeconds === 'number' && (
-            <span className="flex items-center gap-2 text-[11px] font-medium text-pb-gray-muted">
-              Ends in: <CountdownTimer initialSeconds={countdownSeconds} />
+            <span className="flex items-center gap-1.5 text-xs text-pb-gray-muted">
+              Ends in:
+              <CountdownTimer initialSeconds={countdownSeconds} />
             </span>
           )}
         </div>
-        <a href={viewAllHref} className="shrink-0 text-xs font-semibold text-pb-green hover:underline">View all →</a>
+        <a href={viewAllHref} className="text-sm font-medium text-pb-green hover:underline">
+          View all
+        </a>
       </div>
 
       {isMobile ? (
-        <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-1">{products.map((p) => <ProductCard key={p.id} product={p} />)}</div>
+        <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-1">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
       ) : (
-        <div className="grid grid-cols-3 gap-3 md:grid-cols-4 2xl:grid-cols-6">{products.map((p) => <ProductCard key={p.id} product={p} className="w-full" />)}</div>
+        <div className="grid grid-cols-6 gap-4">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} className="w-full" />
+          ))}
+        </div>
       )}
     </section>
   )

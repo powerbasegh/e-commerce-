@@ -24,9 +24,9 @@ export const categories = [
   { id: 'sports-outdoors', name: 'Sports & Outdoors', icon: 'sports' },
   { id: 'baby-products', name: 'Baby Products', icon: 'baby' },
   { id: 'automotive', name: 'Automotive', icon: 'automotive' },
-  { id: 'toys-games', name: 'Toys & Games', icon: 'toys' },
   { id: 'books-stationery', name: 'Books & Stationery', icon: 'books' },
   { id: 'groceries', name: 'Groceries', icon: 'groceries' },
+  { id: 'toys-games', name: 'Toys & Games', icon: 'toys' },
   { id: 'more', name: 'More Categories', icon: 'more' },
 ]
 
@@ -57,31 +57,36 @@ export const trustFeatures = [
   { id: 'top-vendors', label: 'Top Vendors', icon: 'vendors' },
 ]
 
-// Bottom-of-homepage trust/benefits strip (TrustBenefits.jsx).
 export const trustSection = [
   {
-    id: 'trusted-thousands',
-    icon: 'award',
-    title: 'Trusted by Thousands',
-    description: 'Happy customers across Ghana',
+    id: 'secure-payments',
+    icon: 'secure',
+    title: 'Secure Payments',
+    description: 'Your payments are safe with us',
   },
   {
-    id: 'easy-returns',
-    icon: 'returns',
-    title: 'Easy Returns',
-    description: '7-day return policy',
+    id: 'buyer-protection',
+    icon: 'shield',
+    title: 'Buyer Protection',
+    description: 'Get full refund if item not as described',
   },
   {
-    id: 'quality-guaranteed',
-    icon: 'checkCircle',
-    title: 'Quality Guaranteed',
-    description: '100% original products',
+    id: 'reliable-delivery',
+    icon: 'delivery',
+    title: 'Reliable Delivery',
+    description: 'Fast & affordable delivery to your doorstep',
   },
   {
-    id: 'shop-confidence',
-    icon: 'lock',
-    title: 'Shop with Confidence',
-    description: 'Your security is our priority',
+    id: 'top-vendors',
+    icon: 'vendors',
+    title: 'Top Vendors',
+    description: 'Verified & trusted sellers',
+  },
+  {
+    id: 'support',
+    icon: 'support',
+    title: '24/7 Support',
+    description: 'We are here to help',
   },
 ]
 

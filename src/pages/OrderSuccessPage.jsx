@@ -30,7 +30,7 @@ function OrderSuccessPanel({ order }) {
       </span>
 
       <div>
-        <p className="text-xl font-bold text-pb-gray-text">Order Placed Successfully</p>
+        <p className="text-xl font-bold text-pb-gray-text">🎉 Order Placed Successfully</p>
         <p className="mt-1 text-sm text-pb-gray-muted">Thank you for your order.</p>
       </div>
 
