@@ -215,6 +215,37 @@ const paths = {
       <line x1="5" y1="12" x2="19" y2="12" />
     </>
   ),
+  headphones: (
+    <path d="M3 18v-6a9 9 0 0 1 18 0v6M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3v5ZM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3v5Z" />
+  ),
+  lock: (
+    <>
+      <rect x="4" y="10" width="16" height="10" rx="2" />
+      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+      <circle cx="12" cy="15" r="1.5" />
+    </>
+  ),
+  truck: (
+    <>
+      <rect x="1" y="6" width="14" height="10" rx="1" />
+      <path d="M15 10h4l3 3v3h-7" />
+      <circle cx="6" cy="18" r="2" />
+      <circle cx="17" cy="18" r="2" />
+    </>
+  ),
+  chevronLeft: <polyline points="15 18 9 12 15 6" />,
+  returns: (
+    <>
+      <path d="M3 12a9 9 0 1 0 3-6.7" />
+      <polyline points="3 3 3 8 8 8" />
+    </>
+  ),
+  award: (
+    <>
+      <circle cx="12" cy="8" r="6" />
+      <path d="M9 13.5 7 22l5-3 5 3-2-8.5" />
+    </>
+  ),
 }
 
 export default function Icon({ name, size = 20, strokeWidth = 1.8, className = '', filled = false }) {

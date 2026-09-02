@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 import Header from '../components/Header.jsx'
-import Sidebar from '../components/Sidebar.jsx'
-import Hero from '../components/Hero.jsx'
-import SavingsCard from '../components/SavingsCard.jsx'
-import ProductSection from '../components/ProductSection.jsx'
+import CategorySidebar from '../components/CategorySidebar.jsx'
+import HeroSection from '../components/HeroSection.jsx'
+import PromoCard from '../components/PromoCard.jsx'
+import FlashDeals from '../components/FlashDeals.jsx'
+import RecommendedProducts from '../components/RecommendedProducts.jsx'
 import PromoCards from '../components/PromoCards.jsx'
-import TrustSection from '../components/TrustSection.jsx'
-import PopularCategories from '../components/PopularCategories.jsx'
+import TrustBenefits from '../components/TrustBenefits.jsx'
+import CategoryShowcase from '../components/CategoryShowcase.jsx'
+import Footer from '../components/Footer.jsx'
 import MobileHeader from '../components/MobileHeader.jsx'
 import MobileSearch from '../components/MobileSearch.jsx'
 import MobileCategoryRow from '../components/MobileCategoryRow.jsx'
@@ -33,61 +35,58 @@ export default function HomePage() {
     <div className="min-h-screen bg-pb-gray-bg">
       <Header activePath="/" />
 
+      {/* Desktop layout: CategorySidebar | main content, max-width container
+          centered for 1366 / 1440 / 1536px screens. */}
       <div className="mx-auto hidden max-w-[1480px] gap-5 px-5 py-5 xl:flex">
-        <Sidebar />
+        <CategorySidebar />
 
-        <main className="flex min-w-0 flex-1 flex-col gap-5">
+        <main className="flex min-w-0 flex-1 flex-col gap-6">
           <div className="flex gap-5">
             <div className="min-w-0 flex-1">
-              <Hero variant="desktop" />
+              <HeroSection variant="desktop" />
             </div>
-            <SavingsCard />
+            <PromoCard />
           </div>
 
           {loading ? (
             <SectionSkeleton />
           ) : (
             <>
-              <ProductSection
-                title="Flash Deals"
-                products={flashDeals}
-                viewAllHref="/flash-deals"
-                countdownSeconds={flashDealsEndsInSeconds}
-                variant="desktop"
-              />
-              <PopularCategories />
-              <ProductSection
-                title="Recommended for you"
-                products={recommended}
-                viewAllHref="/recommended"
-                variant="desktop"
-              />
+              <FlashDeals products={flashDeals} countdownSeconds={flashDealsEndsInSeconds} variant="desktop" />
+              <CategoryShowcase />
+              <RecommendedProducts products={recommended} variant="desktop" />
             </>
           )}
 
           <PromoCards variant="desktop" />
-          <TrustSection variant="desktop" />
+          <TrustBenefits variant="desktop" />
         </main>
       </div>
 
+      {/* Mobile / tablet layout */}
       <div className="xl:hidden">
         <MobileHeader />
         <main className="flex flex-col gap-5 px-4 pb-24 pt-3">
           <MobileSearch />
-          <Hero variant="mobile" />
+          <HeroSection variant="mobile" />
           <MobileCategoryRow />
-          {loading ? <SectionSkeleton /> : (
+          {loading ? (
+            <SectionSkeleton />
+          ) : (
             <>
-              <ProductSection title="Flash Deals" products={flashDeals} viewAllHref="/flash-deals"
-                countdownSeconds={flashDealsEndsInSeconds} variant="mobile" />
-              <PopularCategories />
-              <ProductSection title="Recommended for you" products={recommended} viewAllHref="/recommended" variant="mobile" />
+              <FlashDeals products={flashDeals} countdownSeconds={flashDealsEndsInSeconds} variant="mobile" />
+              <CategoryShowcase />
+              <RecommendedProducts products={recommended} variant="mobile" />
             </>
           )}
           <PromoCards variant="mobile" />
-          <TrustSection variant="mobile" />
+          <TrustBenefits variant="mobile" />
         </main>
         <BottomNav activeId="home" />
+      </div>
+
+      <div className="hidden xl:block">
+        <Footer />
       </div>
     </div>
   )

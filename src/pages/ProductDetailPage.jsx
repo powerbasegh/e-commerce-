@@ -12,7 +12,7 @@ import BuyerProtectionSection from '../components/BuyerProtectionSection.jsx'
 import ProductInfoTabs from '../components/ProductInfoTabs.jsx'
 import VendorCard from '../components/VendorCard.jsx'
 import ReviewsSection from '../components/ReviewsSection.jsx'
-import ProductSection from '../components/ProductSection.jsx'
+import ProductRail from '../components/ProductRail.jsx'
 import MobilePurchaseBar from '../components/MobilePurchaseBar.jsx'
 import Icon from '../components/Icon.jsx'
 import Toast from '../components/Toast.jsx'
@@ -165,7 +165,7 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            <ProductSection
+            <ProductRail
               title="Related Products"
               products={related}
               viewAllHref={`/category/${product.category.id}`}
@@ -209,7 +209,7 @@ export default function ProductDetailPage() {
               <VendorCard vendor={product.vendor} />
               <ReviewsSection {...reviews} />
 
-              <ProductSection
+              <ProductRail
                 title="Related Products"
                 products={related}
                 viewAllHref={`/category/${product.category.id}`}
