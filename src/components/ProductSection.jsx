@@ -12,7 +12,11 @@ export default function ProductSection({ title, products, viewAllHref = '/produc
             {title === 'Flash Deals' && <Icon name="flash" size={20} className="text-pb-amber" />}
             {title}
           </h2>
-          {typeof countdownSeconds === 'number' && <span className="flex items-center gap-1.5 text-[11px] text-pb-gray-muted">Ends in <CountdownTimer initialSeconds={countdownSeconds} /></span>}
+          {typeof countdownSeconds === 'number' && (
+            <span className="flex items-center gap-2 text-[11px] font-medium text-pb-gray-muted">
+              Ends in: <CountdownTimer initialSeconds={countdownSeconds} />
+            </span>
+          )}
         </div>
         <a href={viewAllHref} className="shrink-0 text-xs font-semibold text-pb-green hover:underline">View all →</a>
       </div>

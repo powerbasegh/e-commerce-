@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import Icon from './Icon.jsx'
-import { currentUser } from '../data/mockData.js'
+import { currentUser, formatGHS } from '../data/mockData.js'
 import { useCart } from '../context/CartContext.jsx'
 import { useAccount } from '../context/AccountContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
@@ -19,13 +19,28 @@ const NAV_LINKS = [
 
 export default function Header({ activePath = '/' }) {
   const [query, setQuery] = useState('')
-  const { totalCount: cartCount } = useCart()
+  const { totalCount: cartCount, subtotal: cartSubtotal } = useCart()
   const { profile, unreadNotificationCount } = useAccount()
   const { isAuthenticated, user, logout } = useAuth()
   const displayName = user?.fullName || profile.fullName || currentUser.name
 
   return (
     <header className="hidden border-b border-pb-gray-border bg-white xl:block">
+      <div className="border-b border-pb-gray-border bg-pb-gray-bg">
+        <div className="mx-auto flex h-9 max-w-[1480px] items-center justify-between px-5 text-[12px] text-pb-gray-muted">
+          <span className="flex items-center gap-1.5 font-medium text-pb-gray-text">
+            <Icon name="shield" size={13} className="text-pb-green" /> 100% Secure Payments
+          </span>
+          <span>Free delivery on orders above GH₵300</span>
+          <span className="flex items-center gap-4">
+            <Link to="/vendors/sell" className="hover:text-pb-green">Sell on PowerBase</Link>
+            <span className="text-pb-gray-border">|</span>
+            <Link to="/support" className="hover:text-pb-green">Customer Support</Link>
+            <span className="text-pb-gray-border">|</span>
+            <Link to="/orders/track" className="hover:text-pb-green">Track Order</Link>
+          </span>
+        </div>
+      </div>
       <div className="mx-auto max-w-[1480px] px-5">
         <div className="flex h-[78px] items-center gap-7">
           <Link to="/" className="flex w-[220px] shrink-0 items-center gap-3">
@@ -64,7 +79,7 @@ export default function Header({ activePath = '/' }) {
             <Link to="/account" className="flex items-center gap-2 text-pb-gray-text">
               <Icon name="user" size={25} />
               <span className="leading-tight">
-                <span className="block text-[10px] text-pb-gray-muted">Hello, Sign in</span>
+                <span className="block text-[10px] text-pb-gray-muted">{isAuthenticated ? `Hello, ${displayName.split(' ')[0]}` : 'Hello, Sign in'}</span>
                 <span className="flex items-center gap-1 text-xs font-semibold">Account <Icon name="chevronDown" size={11} /></span>
               </span>
             </Link>
@@ -72,7 +87,7 @@ export default function Header({ activePath = '/' }) {
               <span className="relative"><Icon name="cart" size={25} className="group-hover:text-pb-green" /><span className="absolute -right-2 -top-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-pb-green px-1 text-[9px] font-bold text-white">{cartCount}</span></span>
               <span className="leading-tight">
                 <span className="block text-xs font-medium">My Cart</span>
-                <span className="block text-xs font-bold">GH₵0.00</span>
+                <span className="block text-xs font-bold">{formatGHS(cartSubtotal)}</span>
               </span>
               <Icon name="chevronDown" size={13} className="text-pb-gray-muted" />
             </Link>
@@ -87,10 +102,13 @@ export default function Header({ activePath = '/' }) {
             {NAV_LINKS.map((link) => (
               <Link key={link.label} to={link.href}
                 className={`relative flex items-center gap-1 py-3 text-sm font-medium transition ${
-                  link.href === activePath ? 'font-semibold text-pb-green' : 'text-pb-gray-text hover:text-pb-green'
+                  link.href === activePath
+                    ? 'font-semibold text-pb-green'
+                    : link.hot
+                      ? 'font-semibold text-pb-red hover:text-pb-red/80'
+                      : 'text-pb-gray-text hover:text-pb-green'
                 }`}>
                 {link.label}
-                {link.hot && <span className="rounded-full bg-pb-red px-1.5 py-0.5 text-[9px] font-bold text-white">Hot</span>}
                 {link.href === activePath && <span className="absolute bottom-0 left-0 right-0 h-0.5 rounded-full bg-pb-green" />}
               </Link>
             ))}

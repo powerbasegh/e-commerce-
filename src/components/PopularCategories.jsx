@@ -20,8 +20,10 @@ export default function PopularCategories() {
       </div>
       <div className="grid grid-cols-4 gap-2.5 sm:grid-cols-6 xl:grid-cols-8">
         {POPULAR.map(([id, name, image]) => (
-          <a key={id} href={`/category/${id}`} className="group flex min-h-[108px] flex-col items-center justify-center gap-2 rounded-xl border border-pb-gray-border bg-white p-3 shadow-card transition hover:-translate-y-0.5 hover:border-pb-green/30 hover:shadow-panel">
-            <span className="flex h-14 w-14 items-center justify-center rounded-lg bg-pb-gray-bg p-1.5"><img src={image} alt={name} className="h-full w-full object-contain transition-transform group-hover:scale-105" /></span>
+          <a key={id} href={`/category/${id}`} className="group flex flex-col items-center gap-2.5 rounded-xl p-3 transition hover:bg-white hover:shadow-card">
+            <span className="flex h-16 w-16 items-center justify-center rounded-full border border-pb-gray-border bg-pb-gray-bg p-3 transition group-hover:border-pb-green/30 group-hover:bg-pb-green-light">
+              <img src={image} alt={name} className="h-full w-full object-contain transition-transform group-hover:scale-105" />
+            </span>
             <span className="line-clamp-1 text-center text-[11px] font-semibold text-pb-gray-text">{name}</span>
           </a>
         ))}

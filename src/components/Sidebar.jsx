@@ -19,6 +19,7 @@ export default function Sidebar() {
       </nav>
 
       <div className="mt-4 rounded-xl border border-pb-gray-border bg-pb-green-light/60 p-4 shadow-card">
+        <p className="mb-2 text-[13px] font-bold text-pb-gray-text">Why shop with us?</p>
         {[
           ['secure', 'Secure Payments', '100% safe & secure payments'],
           ['shield', 'Buyer Protection', 'Get your money back'],
