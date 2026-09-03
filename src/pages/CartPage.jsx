@@ -2,15 +2,16 @@ import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header.jsx'
 import MobileHeader from '../components/MobileHeader.jsx'
 import EmptyCart from '../components/EmptyCart.jsx'
-import CartLineItem from '../components/CartLineItem.jsx'
+import CartVendorGroup from '../components/CartVendorGroup.jsx'
 import OrderSummary from '../components/OrderSummary.jsx'
 import MobileCartSummaryBar from '../components/MobileCartSummaryBar.jsx'
-import { useCart, computeCartSummary } from '../context/CartContext.jsx'
+import { useCart, groupItemsByVendor, computeCartSummary } from '../context/CartContext.jsx'
 
 export default function CartPage() {
   const navigate = useNavigate()
   const { items, totalCount, incrementItem, decrementItem, removeItem } = useCart()
 
+  const vendorGroups = groupItemsByVendor(items)
   const summary = computeCartSummary(items)
 
   // Checkout isn't built yet (explicitly out of scope for this phase) — the
@@ -40,15 +41,16 @@ export default function CartPage() {
         ) : (
           <div className="grid grid-cols-[minmax(0,1fr)_360px] items-start gap-6">
             <div className="flex flex-col gap-4">
-              <section className="rounded-card border border-pb-gray-border bg-white shadow-card">
-                <header className="flex items-center justify-between border-b border-pb-gray-border px-4 py-3.5 sm:px-5">
-                  <div className="flex items-center gap-2.5"><span className="flex h-8 w-8 items-center justify-center rounded-full bg-pb-green-light text-pb-green"><span className="text-xs font-extrabold">P</span></span><div><p className="text-sm font-extrabold text-pb-gray-text">PowerBase Order</p><p className="text-[10px] text-pb-gray-muted">All selected products in one cart</p></div></div>
-                  <span className="text-xs font-bold text-pb-gray-muted">{totalCount} {totalCount === 1 ? 'item' : 'items'}</span>
-                </header>
-                <div className="divide-y divide-pb-gray-border px-4 sm:px-5">
-                  {items.map((item) => <CartLineItem key={item.productId} item={item} onIncrement={incrementItem} onDecrement={decrementItem} onRemove={removeItem} />)}
-                </div>
-              </section>
+              {vendorGroups.map((group, index) => (
+                <CartVendorGroup
+                  key={group.vendor.id}
+                  group={group}
+                  index={index}
+                  onIncrement={incrementItem}
+                  onDecrement={decrementItem}
+                  onRemove={removeItem}
+                />
+              ))}
             </div>
 
             <div className="sticky top-6">
@@ -77,15 +79,16 @@ export default function CartPage() {
             <EmptyCart />
           ) : (
             <>
-              <section className="rounded-card border border-pb-gray-border bg-white shadow-card">
-                <header className="flex items-center justify-between border-b border-pb-gray-border px-4 py-3.5 sm:px-5">
-                  <div className="flex items-center gap-2.5"><span className="flex h-8 w-8 items-center justify-center rounded-full bg-pb-green-light text-pb-green"><span className="text-xs font-extrabold">P</span></span><div><p className="text-sm font-extrabold text-pb-gray-text">PowerBase Order</p><p className="text-[10px] text-pb-gray-muted">All selected products in one cart</p></div></div>
-                  <span className="text-xs font-bold text-pb-gray-muted">{totalCount} {totalCount === 1 ? 'item' : 'items'}</span>
-                </header>
-                <div className="divide-y divide-pb-gray-border px-4 sm:px-5">
-                  {items.map((item) => <CartLineItem key={item.productId} item={item} onIncrement={incrementItem} onDecrement={decrementItem} onRemove={removeItem} />)}
-                </div>
-              </section>
+              {vendorGroups.map((group, index) => (
+                <CartVendorGroup
+                  key={group.vendor.id}
+                  group={group}
+                  index={index}
+                  onIncrement={incrementItem}
+                  onDecrement={decrementItem}
+                  onRemove={removeItem}
+                />
+              ))}
               <OrderSummary summary={summary} onCheckout={handleCheckout} hideButton />
             </>
           )}

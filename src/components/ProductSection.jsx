@@ -1,5 +1,4 @@
 import ProductCard from './ProductCard.jsx'
-import { Link } from 'react-router-dom'
 import CountdownTimer from './CountdownTimer.jsx'
 
 export default function ProductSection({
@@ -25,9 +24,9 @@ export default function ProductSection({
             </span>
           )}
         </div>
-        <Link to={viewAllHref} className="text-sm font-extrabold text-pb-green hover:text-pb-green-dark">
+        <a href={viewAllHref} className="text-sm font-medium text-pb-green hover:underline">
           View all
-        </Link>
+        </a>
       </div>
 
       {isMobile ? (

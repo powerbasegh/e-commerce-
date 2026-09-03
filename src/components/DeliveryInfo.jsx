@@ -9,7 +9,7 @@ export default function DeliveryInfo({ location = 'Accra, Ghana' }) {
         <Icon name="delivery" size={17} className="mt-0.5 shrink-0 text-pb-green" />
         <div className="text-sm">
           <p className="text-pb-gray-text">
-            Delivery available across <span className="font-medium">{location}</span>
+            Deliver to <span className="font-medium">{location}</span>
           </p>
           <p className="text-xs text-pb-gray-muted">Estimated delivery: 2 – 4 business days</p>
         </div>

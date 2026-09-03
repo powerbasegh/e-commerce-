@@ -8,8 +8,8 @@ import Icon from './Icon.jsx'
 export default function TopUtilityBar() {
   return (
     <div className="hidden bg-pb-green-dark text-white lg:block">
-      <div className="mx-auto flex max-w-[1400px] items-center justify-between gap-6 px-6 py-2 text-[12px]">
-        <ul className="flex items-center gap-5">
+      <div className="mx-auto flex max-w-[1480px] items-center justify-between gap-6 px-5 py-1.5 text-[11px]">
+        <ul className="flex items-center gap-4">
           <li className="flex items-center gap-1.5">
             <Icon name="headphones" size={13} />
             24/7 Customer Support
@@ -24,7 +24,7 @@ export default function TopUtilityBar() {
           </li>
         </ul>
 
-        <ul className="flex items-center gap-5">
+        <ul className="flex items-center gap-4">
           <li>
             <Link to="/vendor/apply" className="flex items-center gap-1.5 hover:text-pb-green-light">
               <Icon name="vendors" size={13} />

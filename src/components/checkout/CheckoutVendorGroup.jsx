@@ -11,7 +11,7 @@ export default function CheckoutVendorGroup({ group, index = 0 }) {
       <header className="flex items-center justify-between border-b border-pb-gray-border px-4 py-3">
         <div className="flex items-center gap-2">
           <Icon name="cart" size={15} className="text-pb-green" />
-          <span className="text-sm font-semibold text-pb-gray-text">PowerBase Order</span>
+          <span className="text-sm font-semibold text-pb-gray-text">Package {index + 1}</span>
         </div>
         <span className="text-xs text-pb-gray-muted">{formatGHS(group.subtotal)}</span>
       </header>

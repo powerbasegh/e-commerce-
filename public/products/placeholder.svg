@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="PowerBase product">
+  <rect width="400" height="400" rx="28" fill="#f7f8fa"/>
+  <path d="M122 150h156l-12 190H134l-12-190Z" fill="#e8f5ec" stroke="#1b7a3d" stroke-width="8"/>
+  <path d="M165 150v-25c0-24 16-43 35-43s35 19 35 43v25" fill="none" stroke="#1b7a3d" stroke-width="8" stroke-linecap="round"/>
+  <path d="M200 198v72M164 234h72" stroke="#1b7a3d" stroke-width="10" stroke-linecap="round"/>
+  <text x="200" y="320" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" font-weight="700" fill="#0f4c24">PowerBase</text>
+</svg>

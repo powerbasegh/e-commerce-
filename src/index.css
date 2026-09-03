@@ -30,36 +30,8 @@ input:focus-visible {
   outline-offset: 2px;
 }
 
-/* PowerBase storefront polish */
-.header-action { position: relative; display: flex; min-width: 42px; flex-direction: column; align-items: center; gap: 3px; color: #202522; font-size: 9px; font-weight: 700; }
-.header-action:hover { color: #087f43; }
-.header-badge { position: absolute; display: flex; min-width: 16px; height: 16px; align-items: center; justify-content: center; border-radius: 999px; background: #e02f2f; padding: 0 4px; color: white; font-size: 9px; font-weight: 800; }
-.hero-ring { position:absolute; border:1px solid rgba(112,222,158,.32); border-radius:50%; }
-.hero-ring-1 { width:280px;height:280px;right:-90px;top:-100px; }
-.hero-ring-2 { width:380px;height:380px;right:-140px;top:-150px; }
-.hero-ring-3 { width:480px;height:480px;right:-190px;top:-200px; }
-@media (max-width: 1023px) { body { overflow-x:hidden; } }
 
-/* -------------------------------------------------------------------------
-   PowerBase responsive storefront system
-   ------------------------------------------------------------------------- */
-::selection { background: #d7f4e3; color: #0f4c24; }
-
-html { scroll-behavior: smooth; }
-body { min-width: 320px; }
-
-img { max-width: 100%; }
-
+/* Compact landscape storefront tuning */
 @media (min-width: 1024px) {
-  .storefront-section { scroll-margin-top: 160px; }
-}
-
-@media (max-width: 1023px) {
-  .mobile-section-card { border-radius: 14px; }
-  .mobile-section-card + .mobile-section-card { margin-top: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
+  body { font-size: 14px; }
 }

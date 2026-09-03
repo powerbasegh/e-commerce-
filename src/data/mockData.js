@@ -43,7 +43,7 @@ export const heroSlides = [
   {
     id: 1,
     eyebrow: null,
-    title: ['Everything you need,', 'from trusted brands', 'delivered to you.'],
+    title: ['Everything you need,', 'from trusted vendors', 'delivered to you.'],
     ctaLabel: 'Shop Now',
     ctaHref: '/shop',
     image: '/hero-delivery.svg',
@@ -54,7 +54,7 @@ export const trustFeatures = [
   { id: 'secure-payments', label: 'Secure Payments', icon: 'secure' },
   { id: 'buyer-protection', label: 'Buyer Protection', icon: 'shield' },
   { id: 'reliable-delivery', label: 'Reliable Delivery', icon: 'delivery' },
-  { id: 'quality', label: 'PowerBase Quality', icon: 'checkCircle' },
+  { id: 'top-vendors', label: 'Top Vendors', icon: 'vendors' },
 ]
 
 export const trustSection = [
@@ -444,7 +444,7 @@ export const recommendedProducts = products.filter((p) => p.dealType === 'recomm
 const reviewPool = [
   { author: 'Ama O.', daysAgo: 4, verified: true, rating: 5, comment: 'Exactly as described and arrived faster than expected. Very happy with this purchase.' },
   { author: 'Kojo B.', daysAgo: 11, verified: true, rating: 4, comment: 'Good quality for the price. Packaging could be better but the product itself is solid.' },
-  { author: 'Efua M.', daysAgo: 19, verified: false, rating: 5, comment: 'Works perfectly. PowerBase support was responsive when I had a question before ordering.' },
+  { author: 'Efua M.', daysAgo: 19, verified: false, rating: 5, comment: 'Works perfectly. Vendor was responsive when I had a question before ordering.' },
   { author: 'Yaw D.', daysAgo: 27, verified: true, rating: 3, comment: "It's decent, though I expected slightly better build quality at this price point." },
 ]
 

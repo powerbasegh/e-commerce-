@@ -248,8 +248,6 @@ const paths = {
     </>
   ),
   minus: <line x1="5" y1="12" x2="19" y2="12" />,
-  users: (<> <path d="M16 20c0-3-2.2-5-5-5s-5 2-5 5" /><circle cx="11" cy="8" r="3" /><path d="M18 12a3 3 0 0 0-1.2-5.8" /><path d="M20 20c0-2-1-3.5-2.8-4.3" /></>),
-  refresh: (<> <path d="M20 11a8 8 0 0 0-13.7-5L4 8" /><path d="M4 4v4h4" /><path d="M4 13a8 8 0 0 0 13.7 5L20 16" /><path d="M20 20v-4h-4" /></>),
 }
 
 export default function Icon({ name, size = 20, strokeWidth = 1.8, className = '', filled = false }) {
