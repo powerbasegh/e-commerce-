@@ -1,5 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-  <rect width="200" height="200" rx="16" fill="#1B7A3D" fill-opacity="0.08"/>
-  <rect x="40" y="40" width="120" height="120" rx="12" fill="#1B7A3D" fill-opacity="0.18"/>
-  <text x="100" y="105" font-family="Arial, sans-serif" font-size="14" fill="#1B7A3D" text-anchor="middle" font-weight="600">Watch</text>
+  <rect width="200" height="200" rx="20" fill="#E8F5EC"/>
+  <rect x="82" y="24" width="36" height="26" rx="8" fill="#0F4C24"/>
+  <rect x="82" y="150" width="36" height="26" rx="8" fill="#0F4C24"/>
+  <rect x="62" y="58" width="76" height="84" rx="18" fill="#1B7A3D"/>
+  <rect x="74" y="70" width="52" height="60" rx="8" fill="#E8F5EC"/>
+  <rect x="82" y="80" width="30" height="6" rx="3" fill="#1B7A3D"/>
+  <rect x="82" y="92" width="20" height="6" rx="3" fill="#1B7A3D"/>
+  <circle cx="140" cy="88" r="4" fill="#0F4C24"/>
 </svg>

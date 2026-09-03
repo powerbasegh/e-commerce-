@@ -10,7 +10,7 @@ export default function EmptyCart() {
       <div>
         <p className="text-lg font-bold text-pb-gray-text">Your cart is empty</p>
         <p className="mt-1 text-sm text-pb-gray-muted">
-          Looks like you haven't added anything yet. Start exploring products from trusted vendors.
+          Looks like you haven't added anything yet. Start exploring products from PowerBase.
         </p>
       </div>
       <Link

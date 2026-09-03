@@ -24,9 +24,9 @@ export const categories = [
   { id: 'sports-outdoors', name: 'Sports & Outdoors', icon: 'sports' },
   { id: 'baby-products', name: 'Baby Products', icon: 'baby' },
   { id: 'automotive', name: 'Automotive', icon: 'automotive' },
+  { id: 'toys-games', name: 'Toys & Games', icon: 'toys' },
   { id: 'books-stationery', name: 'Books & Stationery', icon: 'books' },
   { id: 'groceries', name: 'Groceries', icon: 'groceries' },
-  { id: 'toys-games', name: 'Toys & Games', icon: 'toys' },
   { id: 'more', name: 'More Categories', icon: 'more' },
 ]
 
@@ -43,7 +43,7 @@ export const heroSlides = [
   {
     id: 1,
     eyebrow: null,
-    title: ['Everything you need,', 'from trusted vendors', 'delivered to you.'],
+    title: ['Everything you need,', 'from trusted brands', 'delivered to you.'],
     ctaLabel: 'Shop Now',
     ctaHref: '/shop',
     image: '/hero-delivery.svg',
@@ -54,7 +54,7 @@ export const trustFeatures = [
   { id: 'secure-payments', label: 'Secure Payments', icon: 'secure' },
   { id: 'buyer-protection', label: 'Buyer Protection', icon: 'shield' },
   { id: 'reliable-delivery', label: 'Reliable Delivery', icon: 'delivery' },
-  { id: 'top-vendors', label: 'Top Vendors', icon: 'vendors' },
+  { id: 'quality', label: 'PowerBase Quality', icon: 'checkCircle' },
 ]
 
 export const trustSection = [
@@ -77,10 +77,10 @@ export const trustSection = [
     description: 'Fast & affordable delivery to your doorstep',
   },
   {
-    id: 'top-vendors',
+    id: 'quality-guarantee',
     icon: 'vendors',
-    title: 'Top Vendors',
-    description: 'Verified & trusted sellers',
+    title: 'Quality Guarantee',
+    description: 'Every product checked before listing',
   },
   {
     id: 'support',
@@ -102,18 +102,18 @@ export const trustSectionShort = [
 export const buyerProtectionFeatures = [
   { id: 'secure-payments', icon: 'secure', title: 'Secure Payments', description: 'Your payment info is encrypted and protected' },
   { id: 'buyer-protection', icon: 'shield', title: 'Buyer Protection', description: 'Full refund if the item is not as described' },
-  { id: 'verified-vendors', icon: 'vendors', title: 'Verified Vendors', description: 'This vendor has been reviewed by PowerBase' },
+  { id: 'quality-checked', icon: 'vendors', title: 'Quality Checked', description: 'This product has been reviewed by PowerBase' },
   { id: 'reliable-delivery', icon: 'delivery', title: 'Reliable Delivery', description: 'Tracked delivery to your doorstep' },
 ]
 
 export const promoCards = [
   {
-    id: 'top-vendors',
+    id: 'top-brands',
     icon: 'vendors',
-    title: 'Top Vendors',
-    text: 'Shop from trusted vendors',
-    ctaLabel: 'View Vendors',
-    ctaHref: '/vendors',
+    title: 'Top Brands',
+    text: 'Shop trusted, quality brands',
+    ctaLabel: 'Shop Now',
+    ctaHref: '/shop',
     tone: 'green',
   },
   {
@@ -444,7 +444,7 @@ export const recommendedProducts = products.filter((p) => p.dealType === 'recomm
 const reviewPool = [
   { author: 'Ama O.', daysAgo: 4, verified: true, rating: 5, comment: 'Exactly as described and arrived faster than expected. Very happy with this purchase.' },
   { author: 'Kojo B.', daysAgo: 11, verified: true, rating: 4, comment: 'Good quality for the price. Packaging could be better but the product itself is solid.' },
-  { author: 'Efua M.', daysAgo: 19, verified: false, rating: 5, comment: 'Works perfectly. Vendor was responsive when I had a question before ordering.' },
+  { author: 'Efua M.', daysAgo: 19, verified: false, rating: 5, comment: 'Works perfectly. PowerBase support was responsive when I had a question before ordering.' },
   { author: 'Yaw D.', daysAgo: 27, verified: true, rating: 3, comment: "It's decent, though I expected slightly better build quality at this price point." },
 ]
 

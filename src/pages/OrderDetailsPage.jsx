@@ -5,7 +5,7 @@ import Breadcrumbs from '../components/Breadcrumbs.jsx'
 import OrderNotFound from '../components/orders/OrderNotFound.jsx'
 import OrderStatusBadge from '../components/orders/OrderStatusBadge.jsx'
 import OrderStatusTimeline from '../components/orders/OrderStatusTimeline.jsx'
-import OrderVendorGroup from '../components/orders/OrderVendorGroup.jsx'
+import PowerBaseOrderItems from '../components/PowerBaseOrderItems.jsx'
 import OrderFinancialSummary from '../components/orders/OrderFinancialSummary.jsx'
 import OrderDeliveryInfo from '../components/orders/OrderDeliveryInfo.jsx'
 import OrderActivity from '../components/orders/OrderActivity.jsx'
@@ -80,11 +80,7 @@ export default function OrderDetailsPage() {
 
             <OrderActivity events={order.events} />
 
-            <div className="flex flex-col gap-4">
-              {order.vendorGroups.map((group) => (
-                <OrderVendorGroup key={group.vendor.id} group={group} />
-              ))}
-            </div>
+            <PowerBaseOrderItems items={order.items} />
           </div>
 
           <div className="flex flex-col gap-5">
@@ -134,9 +130,7 @@ export default function OrderDetailsPage() {
             <OrderFinancialSummary order={order} />
           </section>
 
-          {order.vendorGroups.map((group) => (
-            <OrderVendorGroup key={group.vendor.id} group={group} />
-          ))}
+          <PowerBaseOrderItems items={order.items} />
 
           <OrderDeliveryInfo delivery={order.delivery} />
           <OrderActivity events={order.events} />

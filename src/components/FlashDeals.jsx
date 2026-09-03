@@ -9,6 +9,7 @@ export default function FlashDeals({ products, countdownSeconds, variant = 'desk
       title="Flash Deals"
       products={products}
       viewAllHref="/flash-deals"
+      viewAllLabel="View all deals"
       countdownSeconds={countdownSeconds}
       variant={variant}
       flash

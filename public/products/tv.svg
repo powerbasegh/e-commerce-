@@ -1,5 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-  <rect width="200" height="200" rx="16" fill="#1A1D1F" fill-opacity="0.08"/>
-  <rect x="40" y="40" width="120" height="120" rx="12" fill="#1A1D1F" fill-opacity="0.18"/>
-  <text x="100" y="105" font-family="Arial, sans-serif" font-size="14" fill="#1A1D1F" text-anchor="middle" font-weight="600">TV</text>
+  <rect width="200" height="200" rx="20" fill="#EFEFF1"/>
+  <rect x="32" y="46" width="136" height="86" rx="8" fill="#1A1D1F"/>
+  <rect x="42" y="56" width="116" height="66" rx="3" fill="#3A3F44"/>
+  <line x1="90" y1="60" x2="150" y2="60" stroke="#5B6167" stroke-width="3"/>
+  <line x1="90" y1="70" x2="130" y2="70" stroke="#5B6167" stroke-width="3"/>
+  <path d="M100 132 L100 148" stroke="#1A1D1F" stroke-width="6"/>
+  <rect x="70" y="148" width="60" height="8" rx="4" fill="#1A1D1F"/>
 </svg>

@@ -1,5 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-  <rect width="200" height="200" rx="16" fill="#6B7280" fill-opacity="0.08"/>
-  <rect x="40" y="40" width="120" height="120" rx="12" fill="#6B7280" fill-opacity="0.18"/>
-  <text x="100" y="105" font-family="Arial, sans-serif" font-size="14" fill="#6B7280" text-anchor="middle" font-weight="600">Blender</text>
+  <rect width="200" height="200" rx="20" fill="#E8F5EC"/>
+  <path d="M78 44h44l-6 74H84Z" fill="#1B7A3D"/>
+  <rect x="72" y="118" width="56" height="14" rx="4" fill="#0F4C24"/>
+  <rect x="62" y="132" width="76" height="34" rx="10" fill="#0F4C24"/>
+  <rect x="86" y="30" width="28" height="16" rx="4" fill="#0F4C24"/>
+  <line x1="72" y1="146" x2="128" y2="146" stroke="#E8F5EC" stroke-width="4"/>
 </svg>

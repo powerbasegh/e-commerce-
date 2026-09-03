@@ -1,5 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
-  <rect width="200" height="200" rx="16" fill="#6B7280" fill-opacity="0.08"/>
-  <rect x="40" y="40" width="120" height="120" rx="12" fill="#6B7280" fill-opacity="0.18"/>
-  <text x="100" y="105" font-family="Arial, sans-serif" font-size="14" fill="#6B7280" text-anchor="middle" font-weight="600">Handbag</text>
+  <rect width="200" height="200" rx="20" fill="#E8F5EC"/>
+  <path d="M78 70c0-16 10-28 22-28s22 12 22 28" stroke="#0F4C24" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <rect x="52" y="70" width="96" height="86" rx="14" fill="#1B7A3D"/>
+  <rect x="90" y="98" width="20" height="14" rx="4" fill="#E8F5EC"/>
+  <path d="M52 96h96" stroke="#0F4C24" stroke-width="4"/>
 </svg>

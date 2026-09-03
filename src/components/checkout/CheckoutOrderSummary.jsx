@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import Icon from '../Icon.jsx'
-import CheckoutVendorGroup from './CheckoutVendorGroup.jsx'
+import PowerBaseOrderItems from '../PowerBaseOrderItems.jsx'
 import DeliveryFeeNotice from '../DeliveryFeeNotice.jsx'
 import { formatGHS } from '../../data/mockData.js'
 
 export default function CheckoutOrderSummary({
-  vendorGroups,
+  items = [],
   summary,
   confirmChecked,
   onToggleConfirm,
@@ -35,9 +35,7 @@ export default function CheckoutOrderSummary({
 
       {itemsExpanded && (
         <div className="flex flex-col gap-3">
-          {vendorGroups.map((group) => (
-            <CheckoutVendorGroup key={group.vendor.id} group={group} />
-          ))}
+          <PowerBaseOrderItems items={items} compact />
         </div>
       )}
 

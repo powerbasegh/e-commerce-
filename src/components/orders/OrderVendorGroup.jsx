@@ -1,13 +1,13 @@
 import { formatGHS } from '../../data/mockData.js'
 import Icon from '../Icon.jsx'
 
-export default function OrderVendorGroup({ group }) {
+export default function OrderVendorGroup({ group, index = 0 }) {
   return (
     <section className="rounded-card border border-pb-gray-border bg-white shadow-card">
       <header className="flex items-center justify-between border-b border-pb-gray-border px-4 py-3">
         <div className="flex items-center gap-2">
-          <Icon name="vendors" size={15} className="text-pb-green" />
-          <span className="text-sm font-semibold text-pb-gray-text">{group.vendor.name}</span>
+          <Icon name="cart" size={15} className="text-pb-green" />
+          <span className="text-sm font-semibold text-pb-gray-text">PowerBase Order</span>
         </div>
         <span className="text-xs text-pb-gray-muted">{formatGHS(group.subtotal)}</span>
       </header>

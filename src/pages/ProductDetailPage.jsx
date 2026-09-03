@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { useParams, useNavigate, Link } from 'react-router-dom'
 import Header from '../components/Header.jsx'
 import MobileHeader from '../components/MobileHeader.jsx'
-import MobileSearch from '../components/MobileSearch.jsx'
 import Breadcrumbs from '../components/Breadcrumbs.jsx'
 import ImageGallery from '../components/ImageGallery.jsx'
 import StarRating from '../components/StarRating.jsx'
@@ -10,7 +9,6 @@ import QuantitySelector from '../components/QuantitySelector.jsx'
 import DeliveryInfo from '../components/DeliveryInfo.jsx'
 import BuyerProtectionSection from '../components/BuyerProtectionSection.jsx'
 import ProductInfoTabs from '../components/ProductInfoTabs.jsx'
-import VendorCard from '../components/VendorCard.jsx'
 import ReviewsSection from '../components/ReviewsSection.jsx'
 import ProductSection from '../components/ProductSection.jsx'
 import MobilePurchaseBar from '../components/MobilePurchaseBar.jsx'
@@ -159,9 +157,8 @@ export default function ProductDetailPage() {
                 <ReviewsSection {...reviews} />
               </div>
               <div className="flex flex-col gap-5">
-                <DeliveryInfo location={product.vendor.location} />
+                <DeliveryInfo location="Ghana" />
                 <BuyerProtectionSection />
-                <VendorCard vendor={product.vendor} />
               </div>
             </div>
 
@@ -182,8 +179,6 @@ export default function ProductDetailPage() {
         <MobileHeader notificationCount={3} />
 
         <main className="flex flex-col gap-5 px-4 pb-28 pt-3">
-          <MobileSearch />
-
           {loading || !product ? (
             <MobileSkeleton />
           ) : (
@@ -203,10 +198,9 @@ export default function ProductDetailPage() {
                 <QuantitySelector quantity={quantity} onChange={setQuantity} max={product.stock} />
               </div>
 
-              <DeliveryInfo location={product.vendor.location} />
+              <DeliveryInfo location="Ghana" />
               <BuyerProtectionSection />
               <ProductInfoTabs description={product.description} specs={product.specs} />
-              <VendorCard vendor={product.vendor} />
               <ReviewsSection {...reviews} />
 
               <ProductSection
@@ -238,9 +232,7 @@ function ProductSummary({ product }) {
   return (
     <div className="flex flex-col gap-1.5">
       <h1 className="text-lg font-bold leading-snug text-pb-gray-text">{product.name}</h1>
-      <p className="text-xs text-pb-gray-muted">
-        Sold by <span className="font-medium text-pb-gray-text">{product.vendor.name}</span>
-      </p>
+      <p className="text-xs text-pb-gray-muted">PowerBase product · Quality checked for our customers</p>
       <div className="flex items-center gap-2">
         <StarRating value={product.rating} />
         <span className="text-xs text-pb-gray-muted">({product.reviewCount} reviews)</span>

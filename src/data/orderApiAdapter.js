@@ -68,7 +68,7 @@ export function adaptOrderDetails({ order, items, events, delivery }) {
     groups.get(key).items.push({
       productId: item.product_id,
       productName: item.product_name,
-      productImage: item.image_url || '/products/placeholder.svg',
+      productImage: item.image_url || '/products/speaker.svg',
       price: Number(item.unit_price),
       quantity: item.quantity,
     })
@@ -83,7 +83,13 @@ export function adaptOrderDetails({ order, items, events, delivery }) {
     orderNumber: order.order_number,
     createdAt: order.created_at,
     status: order.status,
-    items: items.map((i) => ({ productId: i.product_id, quantity: i.quantity })),
+    items: items.map((i) => ({
+      productId: i.product_id,
+      productName: i.product_name,
+      productImage: i.image_url || '/products/speaker.svg',
+      price: Number(i.unit_price),
+      quantity: i.quantity,
+    })),
     vendorGroups,
     pricing: { subtotal, platformFee, amountDueNow: subtotal + platformFee },
     deliveryFee: order.delivery_fee == null ? null : Number(order.delivery_fee),

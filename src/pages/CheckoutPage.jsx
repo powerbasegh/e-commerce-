@@ -216,7 +216,7 @@ export default function CheckoutPage() {
               <p className="rounded-lg bg-red-50 p-3 text-sm text-pb-red">{placeError}</p>
             )}
             <CheckoutOrderSummary
-              vendorGroups={vendorGroups}
+              items={items}
               summary={summary}
               confirmChecked={confirmChecked}
               onToggleConfirm={setConfirmChecked}
@@ -261,7 +261,7 @@ export default function CheckoutPage() {
             <p className="rounded-lg bg-red-50 p-3 text-sm text-pb-red">{placeError}</p>
           )}
           <CheckoutOrderSummary
-            vendorGroups={vendorGroups}
+            items={items}
             summary={summary}
             confirmChecked={confirmChecked}
             onToggleConfirm={setConfirmChecked}
