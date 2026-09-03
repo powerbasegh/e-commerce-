@@ -11,7 +11,7 @@ import { useCart } from '../context/CartContext.jsx'
 // rating + review count, and an Add to Cart action that works straight
 // from the grid without leaving the page.
 export default function ProductCard({ product, className = '' }) {
-  const { name, price, oldPrice, discountPercent, rating, reviewCount, image, category } = product
+  const { name, price, oldPrice, discountPercent, rating, reviewCount, category } = product
   const { addItem, isInCart } = useCart()
   const [wishlisted, setWishlisted] = useState(false)
   const [justAdded, setJustAdded] = useState(false)
@@ -35,47 +35,25 @@ export default function ProductCard({ product, className = '' }) {
   return (
     <Link
       to={`/product/${product.id}`}
-      className={`group relative flex w-[142px] shrink-0 flex-col rounded-card border border-pb-gray-border bg-white p-2 shadow-card transition-shadow hover:shadow-panel sm:w-[154px] ${className}`}
+      className={`group relative flex w-[136px] shrink-0 flex-col rounded-card border border-pb-gray-border bg-white p-2 transition-shadow hover:shadow-panel sm:w-[146px] ${className}`}
     >
-      <div className="relative mb-2 aspect-square overflow-hidden rounded-lg bg-pb-gray-bg">
-        {typeof discountPercent === 'number' && discountPercent > 0 && (
-          <span className="absolute left-1.5 top-1.5 z-10 rounded-md bg-pb-red px-1.5 py-0.5 text-[11px] font-bold text-white">
-            -{discountPercent}%
-          </span>
-        )}
-        <button
-          type="button"
-          onClick={handleToggleWishlist}
-          aria-label={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-          aria-pressed={wishlisted}
-          className="absolute right-1.5 top-1.5 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-white/90 text-pb-gray-muted shadow-sm transition-colors hover:text-pb-red"
-        >
-          <Icon name="heart" size={14} filled={wishlisted} className={wishlisted ? 'text-pb-red' : ''} />
-        </button>
-        <img
-          src={image}
-          alt={name}
-          loading="lazy"
-          className="h-full w-full object-contain p-3 transition-transform group-hover:scale-105"
-        />
-      </div>
 
-      <p className="line-clamp-1 text-[12px] font-semibold text-pb-gray-text">{name}</p>
+      <p className="line-clamp-1 text-[11px] font-semibold text-pb-gray-text">{name}</p>
       {category?.name && (
-        <p className="line-clamp-1 text-[10px] text-pb-gray-muted">{category.name}</p>
+        <p className="line-clamp-1 text-[9px] text-pb-gray-muted">{category.name}</p>
       )}
 
       <div className="mt-1.5 flex items-baseline gap-1.5">
-        <span className="text-[13px] font-extrabold text-pb-gray-text">{formatGHS(price)}</span>
+        <span className="text-[12px] font-extrabold text-pb-gray-text">{formatGHS(price)}</span>
         {oldPrice && (
-          <span className="text-[10px] text-pb-gray-muted line-through">{formatGHS(oldPrice)}</span>
+          <span className="text-[9px] text-pb-gray-muted line-through">{formatGHS(oldPrice)}</span>
         )}
       </div>
 
       <div className="mt-1 flex items-center gap-1">
         <StarRating value={rating} />
         {typeof reviewCount === 'number' && (
-          <span className="text-[10px] text-pb-gray-muted">({reviewCount})</span>
+          <span className="text-[9px] text-pb-gray-muted">({reviewCount})</span>
         )}
       </div>
 
@@ -84,7 +62,7 @@ export default function ProductCard({ product, className = '' }) {
       <button
         type="button"
         onClick={handleAddToCart}
-        className={`mt-2 hidden w-full items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[11px] font-bold transition-colors sm:flex ${
+        className={`mt-2 hidden w-full items-center justify-center gap-1.5 rounded-lg border py-1.5 text-[10px] font-bold transition-colors sm:flex ${
           added
             ? 'border-pb-green bg-pb-green text-white'
             : 'border-pb-green text-pb-green hover:bg-pb-green hover:text-white'

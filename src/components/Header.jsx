@@ -40,14 +40,14 @@ export default function Header({ activePath = '/' }) {
   return (
     <header className="hidden border-b border-pb-gray-border bg-white lg:block">
       {/* Main row: logo, all-categories, search, wishlist/account/cart */}
-      <div className="mx-auto flex max-w-[1480px] items-center gap-4 px-5 py-3">
+      <div className="mx-auto flex max-w-[1480px] items-center gap-3 px-4 py-2.5">
         <Link to="/" className="flex shrink-0 items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-pb-green text-lg font-bold text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-pb-green text-lg font-bold text-white">
             P
           </span>
           <span className="leading-tight">
-            <span className="block text-[17px] font-extrabold text-pb-gray-text">PowerBase</span>
-            <span className="block text-[10px] text-pb-gray-muted">Everything you need</span>
+            <span className="block text-[16px] font-extrabold text-pb-gray-text">PowerBase</span>
+            <span className="block text-[9px] text-pb-gray-muted">Everything you need</span>
           </span>
         </Link>
 
@@ -56,7 +56,7 @@ export default function Header({ activePath = '/' }) {
             type="button"
             onClick={() => setCategoriesOpen((v) => !v)}
             aria-expanded={categoriesOpen}
-            className="flex items-center gap-2 rounded-lg bg-pb-green px-3.5 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-pb-green-dark"
+            className="flex items-center gap-2 rounded-lg bg-pb-green px-3 py-1.5 text-[12px] font-semibold text-white transition-colors hover:bg-pb-green-dark"
           >
             <Icon name="grid" size={16} />
             All Categories
@@ -64,7 +64,7 @@ export default function Header({ activePath = '/' }) {
           </button>
 
           {categoriesOpen && (
-            <div className="absolute left-0 top-[calc(100%+8px)] z-40 w-64 overflow-hidden rounded-lg border border-pb-gray-border bg-white py-1.5 shadow-panel">
+            <div className="absolute left-0 top-[calc(100%+8px)] z-40 w-60 overflow-hidden rounded-lg border border-pb-gray-border bg-white py-1.5 shadow-panel">
               {categories
                 .filter((c) => c.id !== 'more')
                 .map((category) => (
@@ -72,7 +72,7 @@ export default function Header({ activePath = '/' }) {
                     key={category.id}
                     to={`/category/${category.id}`}
                     onClick={() => setCategoriesOpen(false)}
-                    className="flex items-center gap-3 px-4 py-2 text-[13px] text-pb-gray-text transition-colors hover:bg-pb-green-light hover:text-pb-green-dark"
+                    className="flex items-center gap-3 px-3.5 py-1.5 text-[12px] text-pb-gray-text transition-colors hover:bg-pb-green-light hover:text-pb-green-dark"
                   >
                     <Icon name={category.icon} size={15} className="shrink-0 text-pb-gray-muted" />
                     {category.name}
@@ -93,7 +93,7 @@ export default function Header({ activePath = '/' }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search for products, brands and more"
-            className="w-full min-w-0 bg-transparent px-3 py-2.5 text-[13px] text-pb-gray-text placeholder:text-pb-gray-muted focus:outline-none"
+            className="w-full min-w-0 bg-transparent px-2.5 py-2 text-[12px] text-pb-gray-text placeholder:text-pb-gray-muted focus:outline-none"
           />
           <span className="hidden shrink-0 items-center gap-1 border-x border-pb-gray-border px-3 py-2 text-[11px] text-pb-gray-muted md:flex">
             All Categories
@@ -102,7 +102,7 @@ export default function Header({ activePath = '/' }) {
           <button
             type="submit"
             aria-label="Search"
-            className="flex shrink-0 items-center justify-center rounded-r-lg bg-pb-green px-4 py-[11px] text-white transition-colors hover:bg-pb-green-dark"
+            className="flex shrink-0 items-center justify-center rounded-r-lg bg-pb-green px-3.5 py-[9px] text-white transition-colors hover:bg-pb-green-dark"
           >
             <Icon name="search" size={17} />
           </button>
@@ -112,7 +112,7 @@ export default function Header({ activePath = '/' }) {
           <Link
             to="/account/notifications"
             aria-label="Notifications"
-            className="relative flex h-9 w-9 items-center justify-center rounded-full text-pb-gray-text hover:bg-pb-gray-bg hover:text-pb-green"
+            className="relative flex h-8 w-8 items-center justify-center rounded-full text-pb-gray-text hover:bg-pb-gray-bg hover:text-pb-green"
           >
             <Icon name="bell" size={18} />
             {unreadNotificationCount > 0 && (
@@ -146,8 +146,8 @@ export default function Header({ activePath = '/' }) {
 
       {/* Nav row */}
       <div className="border-t border-pb-gray-border">
-        <div className="mx-auto flex max-w-[1480px] items-center justify-between px-6 py-2.5">
-          <nav className="flex items-center gap-5" aria-label="Primary">
+        <div className="mx-auto flex max-w-[1480px] items-center justify-between px-5 py-2">
+          <nav className="flex items-center gap-4" aria-label="Primary">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.label}

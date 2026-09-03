@@ -17,19 +17,19 @@ export default function ProductRail({
   const isMobile = variant === 'mobile'
   return (
     <section aria-labelledby={`section-${title}`} className="min-w-0">
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
         <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1.5">
-          <h2 id={`section-${title}`} className="flex items-center gap-2 text-[16px] font-extrabold text-pb-gray-text">
-            {flash && <Icon name="flash" size={20} className="text-pb-amber" />}
+          <h2 id={`section-${title}`} className="flex items-center gap-2 text-[15px] font-extrabold text-pb-gray-text">
+            {flash && <Icon name="flash" size={17} className="text-pb-amber" />}
             {title}
           </h2>
           {typeof countdownSeconds === 'number' && (
-            <span className="flex items-center gap-2 text-[10px] font-medium text-pb-gray-muted">
+            <span className="flex items-center gap-2 text-[9px] font-medium text-pb-gray-muted">
               Ends in <CountdownTimer initialSeconds={countdownSeconds} compact={isMobile} />
             </span>
           )}
         </div>
-        <a href={viewAllHref} className="shrink-0 text-[11px] font-semibold text-pb-green hover:underline">
+        <a href={viewAllHref} className="shrink-0 text-[10px] font-semibold text-pb-green hover:underline">
           {viewAllLabel} →
         </a>
       </div>
@@ -39,7 +39,7 @@ export default function ProductRail({
           {products.map((p) => <ProductCard key={p.id} product={p} />)}
         </div>
       ) : (
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6">
+        <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6">
           {products.map((p) => <ProductCard key={p.id} product={p} className="w-full" />)}
         </div>
       )}

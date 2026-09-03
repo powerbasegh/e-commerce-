@@ -1,30 +1,30 @@
 import Icon from './Icon.jsx'
 
 const POPULAR = [
-  ['electronics', 'Electronics', '/products/earbuds.svg'],
-  ['phones-tablets', 'Phones', '/products/smartwatch.svg'],
-  ['computing', 'Computing', '/products/tv.svg'],
-  ['fashion', 'Fashion', '/products/sneakers.svg'],
-  ['home-living', 'Home & Living', '/products/airfryer.svg'],
-  ['beauty', 'Beauty', '/products/handbag.svg'],
-  ['sports-outdoors', 'Sports', '/products/speaker.svg'],
-  ['automotive', 'Automotive', '/products/backpack.svg'],
+  ['electronics', 'Electronics', 'headphones'],
+  ['phones-tablets', 'Phones', 'phone'],
+  ['computing', 'Computing', 'laptop'],
+  ['fashion', 'Fashion', 'shirt'],
+  ['home-living', 'Home & Living', 'home'],
+  ['beauty', 'Beauty', 'beauty'],
+  ['sports-outdoors', 'Sports', 'dumbbell'],
+  ['automotive', 'Automotive', 'car'],
 ]
 
 export default function PopularCategories() {
   return (
     <section className="min-w-0">
-      <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-[16px] font-extrabold text-pb-gray-text">Popular Categories</h2>
+      <div className="mb-2 flex items-center justify-between">
+        <h2 className="text-[15px] font-extrabold text-pb-gray-text">Popular Categories</h2>
         <a href="/categories" className="text-xs font-semibold text-pb-green hover:underline">View all →</a>
       </div>
-      <div className="grid grid-cols-4 gap-2.5 sm:grid-cols-6 xl:grid-cols-8">
-        {POPULAR.map(([id, name, image]) => (
-          <a key={id} href={`/category/${id}`} className="group flex flex-col items-center gap-1.5 rounded-lg p-2 transition hover:bg-white hover:shadow-card">
-            <span className="flex h-14 w-14 items-center justify-center rounded-full border border-pb-gray-border bg-pb-gray-bg p-2 transition group-hover:border-pb-green/30 group-hover:bg-pb-green-light">
-              <img src={image} alt={name} className="h-full w-full object-contain transition-transform group-hover:scale-105" />
+      <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-6 xl:grid-cols-8">
+        {POPULAR.map(([id, name, icon]) => (
+          <a key={id} href={`/category/${id}`} className="group flex flex-col items-center gap-1.5 rounded-lg p-1.5 transition hover:bg-white hover:shadow-card">
+            <span className="flex h-8 w-8 items-center justify-center rounded-md border border-pb-gray-border bg-white text-pb-green">
+              <Icon name={icon} size={15} />
             </span>
-            <span className="line-clamp-1 text-center text-[10px] font-semibold text-pb-gray-text">{name}</span>
+            <span className="line-clamp-1 text-center text-[9px] font-semibold text-pb-gray-text">{name}</span>
           </a>
         ))}
       </div>

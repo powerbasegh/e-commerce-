@@ -44,10 +44,10 @@ export default function HomePage() {
       <TopUtilityBar />
       <Header activePath="/" />
 
-      <div className="mx-auto hidden max-w-[1480px] flex-col gap-5 px-5 py-5 xl:px-6 lg:flex">
-        <div className="flex items-start gap-4">
+      <div className="mx-auto hidden max-w-[1500px] flex-col gap-4 px-4 py-4 xl:px-5 lg:flex">
+        <div className="flex items-start gap-3">
           <CategorySidebar />
-          <div className="flex min-w-0 flex-1 items-stretch gap-6">
+          <div className="flex min-w-0 flex-1 items-stretch gap-3">
             <HeroSection variant="desktop" />
             <SavingsCard />
           </div>
@@ -58,7 +58,7 @@ export default function HomePage() {
         ) : (
           <>
             <FlashDeals products={flashDeals} countdownSeconds={flashDealsEndsInSeconds} variant="desktop" />
-            <div className="grid min-w-0 grid-cols-[minmax(0,1.3fr)_minmax(0,0.95fr)] items-start gap-5">
+            <div className="grid min-w-0 grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] items-start gap-4">
               <PopularCategories />
               <RecommendedProducts products={recommended} variant="desktop" />
             </div>

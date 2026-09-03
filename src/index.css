@@ -33,5 +33,5 @@ input:focus-visible {
 
 /* Compact landscape storefront tuning */
 @media (min-width: 1024px) {
-  body { font-size: 14px; }
+  body { font-size: 13px; }
 }
