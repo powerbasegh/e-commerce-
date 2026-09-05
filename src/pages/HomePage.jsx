@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import TopUtilityBar from '../components/TopUtilityBar.jsx'
 import Header from '../components/Header.jsx'
 import CategorySidebar from '../components/CategorySidebar.jsx'
+import SidebarTrustPanel from '../components/SidebarTrustPanel.jsx'
 import HeroSection from '../components/HeroSection.jsx'
 import SavingsCard from '../components/SavingsCard.jsx'
 import FlashDeals from '../components/FlashDeals.jsx'
@@ -46,7 +47,10 @@ export default function HomePage() {
 
       <div className="mx-auto hidden max-w-[1500px] flex-col gap-4 px-4 py-4 xl:px-5 lg:flex">
         <div className="flex items-start gap-3">
-          <CategorySidebar />
+          <div className="flex w-[190px] shrink-0 flex-col gap-3">
+            <CategorySidebar />
+            <SidebarTrustPanel />
+          </div>
           <div className="flex min-w-0 flex-1 items-stretch gap-3">
             <HeroSection variant="desktop" />
             <SavingsCard />
