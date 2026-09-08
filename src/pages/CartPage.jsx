@@ -41,11 +41,10 @@ export default function CartPage() {
         ) : (
           <div className="grid grid-cols-[minmax(0,1fr)_360px] items-start gap-6">
             <div className="flex flex-col gap-4">
-              {vendorGroups.map((group, index) => (
+              {vendorGroups.map((group) => (
                 <CartVendorGroup
                   key={group.vendor.id}
                   group={group}
-                  index={index}
                   onIncrement={incrementItem}
                   onDecrement={decrementItem}
                   onRemove={removeItem}
@@ -79,11 +78,10 @@ export default function CartPage() {
             <EmptyCart />
           ) : (
             <>
-              {vendorGroups.map((group, index) => (
+              {vendorGroups.map((group) => (
                 <CartVendorGroup
                   key={group.vendor.id}
                   group={group}
-                  index={index}
                   onIncrement={incrementItem}
                   onDecrement={decrementItem}
                   onRemove={removeItem}

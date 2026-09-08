@@ -206,48 +206,6 @@ const paths = {
       <line x1="5" y1="12" x2="19" y2="12" />
     </>
   ),
-  lock: (
-    <>
-      <rect x="5" y="11" width="14" height="9" rx="2" />
-      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
-    </>
-  ),
-  truck: (
-    <>
-      <rect x="1" y="6" width="14" height="10" rx="1" />
-      <path d="M15 10h4l3 3v3h-7" />
-      <circle cx="6" cy="18" r="2" />
-      <circle cx="17" cy="18" r="2" />
-    </>
-  ),
-  headphones: (
-    <>
-      <path d="M4 14v-2a8 8 0 0 1 16 0v2" />
-      <rect x="2" y="14" width="5" height="6" rx="1.5" />
-      <rect x="17" y="14" width="5" height="6" rx="1.5" />
-    </>
-  ),
-  flash: <polygon points="13 2 3 14 11 14 10 22 21 10 13 10 13 2" />,
-  tag: (
-    <>
-      <path d="M20.6 12.6 12 21.2 2.8 12 2.8 2.8 12 2.8 20.6 11.4a2 2 0 0 1 0 1.2Z" />
-      <circle cx="7.5" cy="7.5" r="1.5" />
-    </>
-  ),
-  percent: (
-    <>
-      <line x1="19" y1="5" x2="5" y2="19" />
-      <circle cx="6.5" cy="6.5" r="2.5" />
-      <circle cx="17.5" cy="17.5" r="2.5" />
-    </>
-  ),
-  clock: (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <polyline points="12 7 12 12 16 14" />
-    </>
-  ),
-  minus: <line x1="5" y1="12" x2="19" y2="12" />,
 }
 
 export default function Icon({ name, size = 20, strokeWidth = 1.8, className = '', filled = false }) {

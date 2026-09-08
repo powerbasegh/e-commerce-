@@ -161,7 +161,7 @@ export default function ProductDetailPage() {
               <div className="flex flex-col gap-5">
                 <DeliveryInfo location={product.vendor.location} />
                 <BuyerProtectionSection />
-                <VendorCard />
+                <VendorCard vendor={product.vendor} />
               </div>
             </div>
 
@@ -206,7 +206,7 @@ export default function ProductDetailPage() {
               <DeliveryInfo location={product.vendor.location} />
               <BuyerProtectionSection />
               <ProductInfoTabs description={product.description} specs={product.specs} />
-              <VendorCard />
+              <VendorCard vendor={product.vendor} />
               <ReviewsSection {...reviews} />
 
               <ProductSection
@@ -239,7 +239,7 @@ function ProductSummary({ product }) {
     <div className="flex flex-col gap-1.5">
       <h1 className="text-lg font-bold leading-snug text-pb-gray-text">{product.name}</h1>
       <p className="text-xs text-pb-gray-muted">
-        Sold by <span className="font-medium text-pb-gray-text">PowerBase</span>
+        Sold by <span className="font-medium text-pb-gray-text">{product.vendor.name}</span>
       </p>
       <div className="flex items-center gap-2">
         <StarRating value={product.rating} />

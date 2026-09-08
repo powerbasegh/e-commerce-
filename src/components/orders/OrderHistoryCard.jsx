@@ -31,7 +31,7 @@ export default function OrderHistoryCard({ order }) {
       </div>
 
       <p className="text-xs text-pb-gray-muted">
-        {itemCount} {itemCount === 1 ? 'Item' : 'Items'} • {vendorCount} {vendorCount === 1 ? 'Package' : 'Packages'}
+        {itemCount} {itemCount === 1 ? 'Item' : 'Items'} • {vendorCount} {vendorCount === 1 ? 'Store' : 'Stores'}
       </p>
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-pb-gray-border pt-3">

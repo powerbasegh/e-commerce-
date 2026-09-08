@@ -24,9 +24,9 @@ export const categories = [
   { id: 'sports-outdoors', name: 'Sports & Outdoors', icon: 'sports' },
   { id: 'baby-products', name: 'Baby Products', icon: 'baby' },
   { id: 'automotive', name: 'Automotive', icon: 'automotive' },
-  { id: 'toys-games', name: 'Toys & Games', icon: 'toys' },
   { id: 'books-stationery', name: 'Books & Stationery', icon: 'books' },
   { id: 'groceries', name: 'Groceries', icon: 'groceries' },
+  { id: 'toys-games', name: 'Toys & Games', icon: 'toys' },
   { id: 'more', name: 'More Categories', icon: 'more' },
 ]
 
@@ -77,10 +77,10 @@ export const trustSection = [
     description: 'Fast & affordable delivery to your doorstep',
   },
   {
-    id: 'quality-guarantee',
+    id: 'top-vendors',
     icon: 'vendors',
-    title: 'Quality Guarantee',
-    description: 'Every product checked before listing',
+    title: 'Top Vendors',
+    description: 'Verified & trusted sellers',
   },
   {
     id: 'support',
@@ -102,18 +102,18 @@ export const trustSectionShort = [
 export const buyerProtectionFeatures = [
   { id: 'secure-payments', icon: 'secure', title: 'Secure Payments', description: 'Your payment info is encrypted and protected' },
   { id: 'buyer-protection', icon: 'shield', title: 'Buyer Protection', description: 'Full refund if the item is not as described' },
-  { id: 'quality-checked', icon: 'vendors', title: 'Quality Checked', description: 'This product has been reviewed by PowerBase' },
+  { id: 'verified-vendors', icon: 'vendors', title: 'Verified Vendors', description: 'This vendor has been reviewed by PowerBase' },
   { id: 'reliable-delivery', icon: 'delivery', title: 'Reliable Delivery', description: 'Tracked delivery to your doorstep' },
 ]
 
 export const promoCards = [
   {
-    id: 'top-brands',
+    id: 'top-vendors',
     icon: 'vendors',
-    title: 'Top Brands',
-    text: 'Shop trusted, quality brands',
-    ctaLabel: 'Shop Now',
-    ctaHref: '/shop',
+    title: 'Top Vendors',
+    text: 'Shop from trusted vendors',
+    ctaLabel: 'View Vendors',
+    ctaHref: '/vendors',
     tone: 'green',
   },
   {

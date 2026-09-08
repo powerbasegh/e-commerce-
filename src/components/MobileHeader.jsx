@@ -37,7 +37,7 @@ export default function MobileHeader({ onOpenMenu }) {
           </span>
           <span className="leading-tight">
             <span className="block text-sm font-bold text-pb-gray-text">PowerBase</span>
-            <span className="block text-[10px] text-pb-gray-muted">Everything you need</span>
+            <span className="block text-[10px] text-pb-gray-muted">Marketplace</span>
           </span>
         </a>
 

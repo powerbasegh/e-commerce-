@@ -5,13 +5,13 @@ import { formatGHS } from '../../data/mockData.js'
 // review step, not an editing step, so there's no increment/decrement/remove
 // here. Kept as its own component rather than adding a "readOnly" prop to
 // the cart components, per the instruction not to touch existing Cart code.
-export default function CheckoutVendorGroup({ group, index = 0 }) {
+export default function CheckoutVendorGroup({ group }) {
   return (
     <section className="rounded-card border border-pb-gray-border bg-white shadow-card">
       <header className="flex items-center justify-between border-b border-pb-gray-border px-4 py-3">
         <div className="flex items-center gap-2">
-          <Icon name="cart" size={15} className="text-pb-green" />
-          <span className="text-sm font-semibold text-pb-gray-text">Package {index + 1}</span>
+          <Icon name="vendors" size={15} className="text-pb-green" />
+          <span className="text-sm font-semibold text-pb-gray-text">{group.vendor.name}</span>
         </div>
         <span className="text-xs text-pb-gray-muted">{formatGHS(group.subtotal)}</span>
       </header>

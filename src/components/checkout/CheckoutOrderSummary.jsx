@@ -35,8 +35,8 @@ export default function CheckoutOrderSummary({
 
       {itemsExpanded && (
         <div className="flex flex-col gap-3">
-          {vendorGroups.map((group, index) => (
-            <CheckoutVendorGroup key={group.vendor.id} group={group} index={index} />
+          {vendorGroups.map((group) => (
+            <CheckoutVendorGroup key={group.vendor.id} group={group} />
           ))}
         </div>
       )}

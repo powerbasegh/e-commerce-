@@ -81,8 +81,8 @@ export default function OrderDetailsPage() {
             <OrderActivity events={order.events} />
 
             <div className="flex flex-col gap-4">
-              {order.vendorGroups.map((group, index) => (
-                <OrderVendorGroup key={group.vendor.id} group={group} index={index} />
+              {order.vendorGroups.map((group) => (
+                <OrderVendorGroup key={group.vendor.id} group={group} />
               ))}
             </div>
           </div>
@@ -134,8 +134,8 @@ export default function OrderDetailsPage() {
             <OrderFinancialSummary order={order} />
           </section>
 
-          {order.vendorGroups.map((group, index) => (
-            <OrderVendorGroup key={group.vendor.id} group={group} index={index} />
+          {order.vendorGroups.map((group) => (
+            <OrderVendorGroup key={group.vendor.id} group={group} />
           ))}
 
           <OrderDeliveryInfo delivery={order.delivery} />
