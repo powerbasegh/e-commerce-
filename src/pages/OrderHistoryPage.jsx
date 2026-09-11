@@ -43,7 +43,7 @@ export default function OrderHistoryPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-pb-gray-bg">
-        <Header notificationCount={3} activePath="" />
+        <Header activePath="" />
         <div className="mx-auto max-w-[1400px] px-6 py-10 text-sm text-pb-gray-muted">Loading your orders…</div>
       </div>
     )
@@ -51,7 +51,7 @@ export default function OrderHistoryPage() {
 
   return (
     <div className="min-h-screen bg-pb-gray-bg">
-      <Header notificationCount={3} activePath="" />
+      <Header activePath="" />
 
       <div className="mx-auto hidden max-w-[1400px] flex-col gap-5 px-6 py-6 lg:flex">
         <h1 className="text-xl font-bold text-pb-gray-text">My Orders</h1>
@@ -67,7 +67,7 @@ export default function OrderHistoryPage() {
       </div>
 
       <div className="lg:hidden">
-        <MobileHeader notificationCount={3} />
+        <MobileHeader />
         <main className="flex flex-col gap-4 px-4 pb-6 pt-3">
           <h1 className="text-lg font-bold text-pb-gray-text">My Orders</h1>
           {orders.length === 0 ? (

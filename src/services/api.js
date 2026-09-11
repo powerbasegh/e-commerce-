@@ -32,6 +32,14 @@ export const api = {
   markNotificationRead: (id) => request(`/notifications/${encodeURIComponent(id)}/read`, { method: 'PUT' }),
   markAllNotificationsRead: () => request('/notifications/read-all', { method: 'PUT' }),
   checkDatabase: () => request('/health/db', { headers: {} }),
+  getProducts: (params = {}) => {
+    const query = new URLSearchParams(
+      Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== ''),
+    ).toString()
+    return request(`/products${query ? `?${query}` : ''}`)
+  },
+  getProduct: (id) => request(`/products/${encodeURIComponent(id)}`),
+  getCategories: () => request('/products/categories'),
   getAdminOrders: () => request('/admin/orders'),
   updateDeliveryFee: (orderId, feeData) => request(`/admin/orders/${encodeURIComponent(orderId)}/delivery-fee`, { method: 'PUT', body: JSON.stringify(feeData) }),
 }

@@ -206,6 +206,66 @@ const paths = {
       <line x1="5" y1="12" x2="19" y2="12" />
     </>
   ),
+  flash: <polygon points="13 2 3 14 11 14 10 22 21 10 13 10 13 2" />,
+  tag: (
+    <>
+      <path d="M20.59 13.41 11 3.83A2 2 0 0 0 9.59 3.24L4 3a1 1 0 0 0-1 1l.24 5.59a2 2 0 0 0 .59 1.41l9.59 9.59a2 2 0 0 0 2.83 0l4.34-4.34a2 2 0 0 0 0-2.83Z" />
+      <circle cx="7.5" cy="7.5" r="1.2" fill="currentColor" stroke="none" />
+    </>
+  ),
+  truck: (
+    <>
+      <rect x="1" y="6" width="14" height="11" rx="1" />
+      <path d="M15 10h4l3 3v4h-7z" />
+      <circle cx="6" cy="19" r="1.8" />
+      <circle cx="17.5" cy="19" r="1.8" />
+    </>
+  ),
+  lock: (
+    <>
+      <rect x="4" y="10" width="16" height="10" rx="2" />
+      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+    </>
+  ),
+  minus: <line x1="5" y1="12" x2="19" y2="12" />,
+  chevronLeft: <polyline points="15 18 9 12 15 6" />,
+  filter: (
+    <>
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="4" y1="12" x2="20" y2="12" />
+      <line x1="4" y1="18" x2="20" y2="18" />
+      <circle cx="9" cy="6" r="1.8" fill="currentColor" stroke="none" />
+      <circle cx="16" cy="12" r="1.8" fill="currentColor" stroke="none" />
+      <circle cx="11" cy="18" r="1.8" fill="currentColor" stroke="none" />
+    </>
+  ),
+  mail: (
+    <>
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <polyline points="2 6 12 13 22 6" />
+    </>
+  ),
+  logout: (
+    <>
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+      <polyline points="16 17 21 12 16 7" />
+      <line x1="21" y1="12" x2="9" y2="12" />
+    </>
+  ),
+  box: (
+    <>
+      <path d="M21 8 12 3 3 8l9 5 9-5Z" />
+      <path d="M3 8v8l9 5 9-5V8" />
+      <path d="M12 13v8" />
+    </>
+  ),
+  package: (
+    <>
+      <path d="M21 8 12 3 3 8l9 5 9-5Z" />
+      <path d="M3 8v8l9 5 9-5V8" />
+      <path d="M12 13v8" />
+    </>
+  ),
 }
 
 export default function Icon({ name, size = 20, strokeWidth = 1.8, className = '', filled = false }) {

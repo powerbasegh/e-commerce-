@@ -2,16 +2,15 @@ import { useNavigate } from 'react-router-dom'
 import Header from '../components/Header.jsx'
 import MobileHeader from '../components/MobileHeader.jsx'
 import EmptyCart from '../components/EmptyCart.jsx'
-import CartVendorGroup from '../components/CartVendorGroup.jsx'
+import CartItemsPanel from '../components/CartItemsPanel.jsx'
 import OrderSummary from '../components/OrderSummary.jsx'
 import MobileCartSummaryBar from '../components/MobileCartSummaryBar.jsx'
-import { useCart, groupItemsByVendor, computeCartSummary } from '../context/CartContext.jsx'
+import { useCart, computeCartSummary } from '../context/CartContext.jsx'
 
 export default function CartPage() {
   const navigate = useNavigate()
   const { items, totalCount, incrementItem, decrementItem, removeItem } = useCart()
 
-  const vendorGroups = groupItemsByVendor(items)
   const summary = computeCartSummary(items)
 
   // Checkout isn't built yet (explicitly out of scope for this phase) — the
@@ -26,7 +25,7 @@ export default function CartPage() {
       {/* ------------------------------------------------------------------ */}
       {/* Desktop layout                                                      */}
       {/* ------------------------------------------------------------------ */}
-      <Header notificationCount={3} activePath="" />
+      <Header activePath="" />
 
       <div className="mx-auto hidden max-w-[1400px] flex-col gap-5 px-6 py-6 lg:flex">
         <div>
@@ -41,15 +40,12 @@ export default function CartPage() {
         ) : (
           <div className="grid grid-cols-[minmax(0,1fr)_360px] items-start gap-6">
             <div className="flex flex-col gap-4">
-              {vendorGroups.map((group) => (
-                <CartVendorGroup
-                  key={group.vendor.id}
-                  group={group}
-                  onIncrement={incrementItem}
-                  onDecrement={decrementItem}
-                  onRemove={removeItem}
-                />
-              ))}
+              <CartItemsPanel
+                items={items}
+                onIncrement={incrementItem}
+                onDecrement={decrementItem}
+                onRemove={removeItem}
+              />
             </div>
 
             <div className="sticky top-6">
@@ -64,7 +60,7 @@ export default function CartPage() {
       {/* of the bottom tab nav on this page, same pattern as Product Details */}
       {/* ------------------------------------------------------------------ */}
       <div className="lg:hidden">
-        <MobileHeader notificationCount={3} />
+        <MobileHeader />
 
         <main className={`flex flex-col gap-4 px-4 pt-3 ${items.length === 0 ? 'pb-6' : 'pb-28'}`}>
           <div>
@@ -78,15 +74,12 @@ export default function CartPage() {
             <EmptyCart />
           ) : (
             <>
-              {vendorGroups.map((group) => (
-                <CartVendorGroup
-                  key={group.vendor.id}
-                  group={group}
-                  onIncrement={incrementItem}
-                  onDecrement={decrementItem}
-                  onRemove={removeItem}
-                />
-              ))}
+              <CartItemsPanel
+                items={items}
+                onIncrement={incrementItem}
+                onDecrement={decrementItem}
+                onRemove={removeItem}
+              />
               <OrderSummary summary={summary} onCheckout={handleCheckout} hideButton />
             </>
           )}

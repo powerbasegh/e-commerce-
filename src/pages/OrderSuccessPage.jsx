@@ -1,8 +1,12 @@
 import { Link, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 import Header from '../components/Header.jsx'
 import MobileHeader from '../components/MobileHeader.jsx'
 import Icon from '../components/Icon.jsx'
 import { getOrderByNumber } from '../data/orderStorage.js'
+import { useAuth } from '../context/AuthContext.jsx'
+import { api } from '../services/api.js'
+import { adaptOrderDetails } from '../data/orderApiAdapter.js'
 import { ORDER_STATUS_LABEL } from '../constants/orderStatus.js'
 
 function OrderSuccessPanel({ order }) {
@@ -71,17 +75,53 @@ function OrderSuccessPanel({ order }) {
 
 export default function OrderSuccessPage() {
   const { orderNumber } = useParams()
-  const order = getOrderByNumber(orderNumber)
+  const { isAuthenticated } = useAuth()
+
+  const [order, setOrder] = useState(() => (isAuthenticated ? null : getOrderByNumber(orderNumber)))
+  const [loading, setLoading] = useState(isAuthenticated)
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setOrder(getOrderByNumber(orderNumber))
+      setLoading(false)
+      return
+    }
+    let cancelled = false
+    setLoading(true)
+    api
+      .getOrderById(orderNumber)
+      .then((data) => {
+        if (!cancelled) setOrder(adaptOrderDetails(data))
+      })
+      .catch(() => {
+        if (!cancelled) setOrder(null)
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [isAuthenticated, orderNumber])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-pb-gray-bg">
+        <Header activePath="" />
+        <div className="mx-auto max-w-2xl px-6 py-10 text-sm text-pb-gray-muted">Loading your order…</div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-pb-gray-bg">
-      <Header notificationCount={3} activePath="" />
+      <Header activePath="" />
       <div className="mx-auto hidden max-w-2xl px-6 py-10 lg:block">
         <OrderSuccessPanel order={order} />
       </div>
 
       <div className="lg:hidden">
-        <MobileHeader notificationCount={3} />
+        <MobileHeader />
         <main className="px-4 py-6">
           <OrderSuccessPanel order={order} />
         </main>

@@ -48,9 +48,7 @@ export default function LoginPage() {
         className="flex w-full max-w-sm flex-col gap-4 rounded-card border border-pb-gray-border bg-white p-6 shadow-card"
       >
         <div className="flex flex-col items-center gap-1 text-center">
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-pb-green text-lg font-bold text-white">
-            P
-          </span>
+          <img src="/logo-powerbase.png" alt="PowerBase" className="h-12 w-12 object-contain" />
           <h1 className="mt-1 text-lg font-bold text-pb-gray-text">Log in to PowerBase</h1>
           <p className="text-xs text-pb-gray-muted">Welcome back — enter your details to continue.</p>
         </div>

@@ -136,13 +136,18 @@ exports.track = async (req, res) => {
 exports.vendorOrders = async(req,res)=>{
   const [vendor]=await db.execute('SELECT id FROM vendors WHERE user_id=? LIMIT 1',[req.user.id]);
   if(!vendor.length)return res.status(404).json({message:'Vendor profile not found'});
-  const [rows]=await db.execute(`SELECT vo.id,vo.order_id,vo.subtotal,vo.status,o.order_number,o.created_at,vs.vendor_gross,vs.powerbase_margin,vs.status settlement_status FROM vendor_orders vo JOIN orders o ON o.id=vo.order_id LEFT JOIN vendor_settlements vs ON vs.vendor_order_id=vo.id WHERE vo.vendor_id=? ORDER BY o.created_at DESC`,[vendor[0].id]);
+  // powerbase_margin is PowerBase's internal business information and must
+  // never be selected here — only the vendor's own gross earnings and
+  // settlement status are vendor-facing (see PROJECT_NOTES.md).
+  const [rows]=await db.execute(`SELECT vo.id,vo.order_id,vo.subtotal,vo.status,o.order_number,o.created_at,vs.vendor_gross,vs.status settlement_status FROM vendor_orders vo JOIN orders o ON o.id=vo.order_id LEFT JOIN vendor_settlements vs ON vs.vendor_order_id=vo.id WHERE vo.vendor_id=? ORDER BY o.created_at DESC`,[vendor[0].id]);
   res.json({orders:rows});
 };
 
 exports.vendorSettlements = async(req,res)=>{
   const [vendor]=await db.execute('SELECT id FROM vendors WHERE user_id=? LIMIT 1',[req.user.id]);
   if(!vendor.length)return res.status(404).json({message:'Vendor profile not found'});
+  // Same rule as vendorOrders above: vendor_gross/payout fields only, never
+  // powerbase_margin.
   const [rows]=await db.execute(`SELECT vs.id,vs.order_id,vs.vendor_order_id,vs.vendor_gross,vs.status,vs.payout_reference,vs.eligible_at,vs.paid_at,o.order_number,o.created_at FROM vendor_settlements vs JOIN orders o ON o.id=vs.order_id WHERE vs.vendor_id=? ORDER BY vs.created_at DESC`,[vendor[0].id]);
   res.json({settlements:rows});
 };

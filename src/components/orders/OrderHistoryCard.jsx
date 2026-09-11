@@ -12,12 +12,11 @@ function formatOrderDate(isoString) {
 }
 
 export default function OrderHistoryCard({ order }) {
-  // Backend order-history rows (adaptOrderSummary) carry pre-computed
-  // itemCount/vendorCount instead of full items/vendorGroups arrays — fall
-  // back to deriving them for locally-stored guest orders, which still
-  // carry the full arrays.
+  // Backend order-history rows (adaptOrderSummary) carry a pre-computed
+  // itemCount instead of a full items array — fall back to deriving it for
+  // locally-stored guest orders, which still carry the full array. Never
+  // shown: a vendor/store breakdown — customers see one PowerBase order.
   const itemCount = order.itemCount ?? order.items.reduce((sum, item) => sum + item.quantity, 0)
-  const vendorCount = order.vendorCount ?? order.vendorGroups.length
   const { amountDueNow, deliveryFee } = computeOrderFinancials(order)
 
   return (
@@ -31,7 +30,7 @@ export default function OrderHistoryCard({ order }) {
       </div>
 
       <p className="text-xs text-pb-gray-muted">
-        {itemCount} {itemCount === 1 ? 'Item' : 'Items'} • {vendorCount} {vendorCount === 1 ? 'Store' : 'Stores'}
+        {itemCount} {itemCount === 1 ? 'Item' : 'Items'}
       </p>
 
       <div className="flex flex-wrap items-center justify-between gap-3 border-t border-pb-gray-border pt-3">

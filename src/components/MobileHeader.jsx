@@ -1,17 +1,34 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import Icon from './Icon.jsx'
-import { categories } from '../data/mockData.js'
+import { api } from '../services/api.js'
 import { useCart } from '../context/CartContext.jsx'
 import { useAccount } from '../context/AccountContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 
 export default function MobileHeader({ onOpenMenu }) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [categories, setCategories] = useState([])
   const { totalCount: cartCount } = useCart()
-  // Real unread notification count — see the same note in Header.jsx.
   const { unreadNotificationCount } = useAccount()
   const { isAuthenticated, user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!menuOpen) return
+    let cancelled = false
+    api
+      .getCategories()
+      .then((data) => {
+        if (!cancelled) setCategories(data.categories || [])
+      })
+      .catch(() => {
+        if (!cancelled) setCategories([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [menuOpen])
 
   function toggleMenu() {
     setMenuOpen((v) => !v)
@@ -20,40 +37,45 @@ export default function MobileHeader({ onOpenMenu }) {
 
   return (
     <>
-      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-pb-gray-border bg-white px-4 py-3 lg:hidden">
+      <header className="sticky top-0 z-30 flex items-center justify-between border-b border-pb-gray-border bg-white px-4 py-2.5 lg:hidden">
         <button
           type="button"
           aria-label="Open menu"
           aria-expanded={menuOpen}
           onClick={toggleMenu}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-pb-gray-text active:bg-pb-gray-bg"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm text-pb-gray-text active:bg-pb-gray-bg"
         >
           <Icon name="menu" size={22} />
         </button>
 
-        <a href="/" className="flex items-center gap-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-pb-green text-sm font-bold text-white">
-            P
+        <Link to="/" className="flex items-center gap-1.5">
+          <img src="/logo-powerbase.png" alt="" aria-hidden="true" className="h-7 w-7 object-contain" />
+          <span className="text-[15px] font-extrabold text-pb-navy">
+            Power<span className="text-pb-green">Base</span>
           </span>
-          <span className="leading-tight">
-            <span className="block text-sm font-bold text-pb-gray-text">PowerBase</span>
-            <span className="block text-[10px] text-pb-gray-muted">Marketplace</span>
-          </span>
-        </a>
+        </Link>
 
-        <div className="flex items-center gap-1">
-          <Link to="/account/notifications" aria-label="Notifications" className="relative flex h-9 w-9 items-center justify-center rounded-lg text-pb-gray-text active:bg-pb-gray-bg">
-            <Icon name="bell" size={21} />
+        <div className="flex items-center gap-0.5">
+          <Link
+            to="/account/notifications"
+            aria-label="Notifications"
+            className="relative flex h-9 w-9 items-center justify-center rounded-sm text-pb-gray-text active:bg-pb-gray-bg"
+          >
+            <Icon name="bell" size={20} />
             {unreadNotificationCount > 0 && (
-              <span className="absolute right-0.5 top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-pb-red px-1 text-[10px] font-semibold text-white">
+              <span className="absolute right-0.5 top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-pb-green px-1 text-[10px] font-semibold text-white">
                 {unreadNotificationCount}
               </span>
             )}
           </Link>
-          <Link to="/cart" aria-label="Cart" className="relative flex h-9 w-9 items-center justify-center rounded-lg text-pb-gray-text active:bg-pb-gray-bg">
-            <Icon name="cart" size={21} />
+          <Link
+            to="/cart"
+            aria-label="Cart"
+            className="relative flex h-9 w-9 items-center justify-center rounded-sm text-pb-gray-text active:bg-pb-gray-bg"
+          >
+            <Icon name="cart" size={20} />
             {cartCount > 0 && (
-              <span className="absolute right-0.5 top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-pb-red px-1 text-[10px] font-semibold text-white">
+              <span className="absolute right-0.5 top-0.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-pb-green px-1 text-[10px] font-semibold text-white">
                 {cartCount}
               </span>
             )}
@@ -76,7 +98,7 @@ export default function MobileHeader({ onOpenMenu }) {
                 type="button"
                 aria-label="Close menu"
                 onClick={() => setMenuOpen(false)}
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-pb-gray-muted active:bg-pb-gray-bg"
+                className="flex h-8 w-8 items-center justify-center rounded-sm text-pb-gray-muted active:bg-pb-gray-bg"
               >
                 <Icon name="close" size={18} />
               </button>
@@ -84,22 +106,17 @@ export default function MobileHeader({ onOpenMenu }) {
             <ul className="flex flex-1 flex-col gap-0.5 overflow-y-auto">
               {categories.map((category) => (
                 <li key={category.id}>
-                  <a
-                    href={`/category/${category.id}`}
-                    className="flex items-center gap-3 rounded-lg px-2 py-2.5 text-sm text-pb-gray-text active:bg-pb-green-light"
+                  <Link
+                    to={`/search?category=${encodeURIComponent(category.id)}`}
+                    onClick={() => setMenuOpen(false)}
+                    className="flex items-center justify-between rounded-sm px-2 py-2.5 text-sm text-pb-gray-text active:bg-pb-green-light"
                   >
-                    <Icon name={category.icon} size={16} className="text-pb-gray-muted" />
                     {category.name}
-                  </a>
+                    <Icon name="chevronRight" size={14} className="text-pb-gray-muted" />
+                  </Link>
                 </li>
               ))}
             </ul>
-            <a
-              href="/vendor/apply"
-              className="mt-3 flex items-center justify-center gap-2 rounded-card bg-pb-green py-2.5 text-sm font-semibold text-white"
-            >
-              Become a Vendor
-            </a>
 
             {isAuthenticated ? (
               <div className="mt-3 flex items-center justify-between rounded-card border border-pb-gray-border px-3 py-2.5">
@@ -109,6 +126,7 @@ export default function MobileHeader({ onOpenMenu }) {
                   onClick={() => {
                     logout()
                     setMenuOpen(false)
+                    navigate('/')
                   }}
                   className="shrink-0 text-xs font-semibold text-pb-red"
                 >

@@ -5,20 +5,27 @@ export default {
     extend: {
       colors: {
         pb: {
+          // Sampled from the PowerBase "P" mark supplied for this redesign.
           green: {
-            DEFAULT: '#1B7A3D',
-            dark: '#0F4C24',
-            darker: '#0A331A',
-            light: '#E8F5EC',
+            DEFAULT: '#0E9E28',
+            dark: '#0B7A1F',
+            darker: '#075614',
+            light: '#E6F6E9',
+            tint: '#F2FBF3',
+          },
+          navy: {
+            DEFAULT: '#12202B',
+            soft: '#1E323F',
           },
           gray: {
-            bg: '#F7F8FA',
-            border: '#E6E8EB',
-            text: '#1A1D1F',
-            muted: '#6B7280',
+            bg: '#F5F6F7',
+            surface: '#FFFFFF',
+            border: '#E3E6E8',
+            text: '#171A1C',
+            muted: '#6B7378',
           },
-          amber: '#F5A623',
-          red: '#E0392B',
+          amber: '#C9781A',
+          red: '#C4321F',
         },
       },
       fontFamily: {
@@ -33,11 +40,12 @@ export default {
         ],
       },
       borderRadius: {
-        card: '14px',
+        card: '10px',
+        sm: '6px',
       },
       boxShadow: {
-        card: '0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06)',
-        panel: '0 2px 8px rgba(16, 24, 40, 0.06)',
+        card: '0 1px 2px rgba(16, 24, 40, 0.05)',
+        panel: '0 4px 16px rgba(16, 24, 40, 0.08)',
       },
     },
   },

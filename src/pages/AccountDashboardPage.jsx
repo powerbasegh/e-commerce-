@@ -1,25 +1,49 @@
-import { useMemo } from 'react'
+import { useEffect, useState } from 'react'
 import AccountLayout from '../components/account/AccountLayout.jsx'
 import AccountWelcomeSection from '../components/account/AccountWelcomeSection.jsx'
 import AccountSummaryCard from '../components/account/AccountSummaryCard.jsx'
 import AccountQuickActions from '../components/account/AccountQuickActions.jsx'
 import AccountMobileMenuList from '../components/account/AccountMobileMenuList.jsx'
 import { useAccount } from '../context/AccountContext.jsx'
+import { useAuth } from '../context/AuthContext.jsx'
 import { getOrders } from '../data/orderStorage.js'
 import { ORDER_STATUS } from '../constants/orderStatus.js'
-import { currentUser } from '../data/mockData.js'
+import { api } from '../services/api.js'
+import { adaptOrderSummary } from '../data/orderApiAdapter.js'
 
 export default function AccountDashboardPage() {
   const { profile, addresses } = useAccount()
+  const { isAuthenticated, user } = useAuth()
 
-  // Real locally stored order data only — no invented statistics.
-  const orders = useMemo(() => getOrders(), [])
+  // Real order counts only — from the backend for a logged-in customer,
+  // from local storage for a guest. Never invented.
+  const [orders, setOrders] = useState(() => (isAuthenticated ? [] : getOrders()))
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setOrders(getOrders())
+      return
+    }
+    let cancelled = false
+    api
+      .getOrders()
+      .then((data) => {
+        if (!cancelled) setOrders((data.orders || []).map(adaptOrderSummary))
+      })
+      .catch(() => {
+        if (!cancelled) setOrders([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [isAuthenticated])
+
   const totalOrders = orders.length
   const ordersAwaitingDeliveryFee = orders.filter(
     (order) => order.status === ORDER_STATUS.DELIVERY_FEE_PENDING,
   ).length
 
-  const displayName = profile.fullName || currentUser.name
+  const displayName = profile.fullName || user?.fullName || 'there'
 
   return (
     <AccountLayout activeId="dashboard" title="My Account" showMobileBack={false}>

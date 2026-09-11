@@ -48,34 +48,29 @@ export function adaptOrderSummary(row) {
     createdAt: row.created_at,
     status: row.status,
     itemCount: Number(row.item_count) || 0,
-    vendorCount: Number(row.vendor_count) || 0,
     items: [], // summary rows don't carry line items — itemCount covers the card's needs
-    vendorGroups: [],
     pricing: { subtotal, platformFee, amountDueNow: subtotal + platformFee },
     deliveryFee: row.delivery_fee == null ? null : Number(row.delivery_fee),
   }
 }
 
-/** Full order detail — from GET /orders/:orderNumber (getMine). */
+/**
+ * Full order detail — from GET /orders/:orderNumber (getMine). The backend
+ * deliberately never joins vendor tables or selects vendor_id/store_name
+ * for this endpoint (see orderController.getMine), so this adapter builds
+ * one flat PowerBase item list — it must never re-introduce a vendor
+ * grouping/label the backend doesn't (and shouldn't) provide.
+ */
 export function adaptOrderDetails({ order, items, events, delivery }) {
   const subtotal = Number(order.subtotal)
   const platformFee = Number(order.platform_fee)
 
-  const groups = new Map()
-  for (const item of items) {
-    const key = String(item.vendor_id)
-    if (!groups.has(key)) groups.set(key, { vendor: { id: key, name: item.store_name }, items: [] })
-    groups.get(key).items.push({
-      productId: item.product_id,
-      productName: item.product_name,
-      productImage: item.image_url || '/products/placeholder.svg',
-      price: Number(item.unit_price),
-      quantity: item.quantity,
-    })
-  }
-  const vendorGroups = Array.from(groups.values()).map((g) => ({
-    ...g,
-    subtotal: g.items.reduce((sum, i) => sum + i.price * i.quantity, 0),
+  const adaptedItems = items.map((item) => ({
+    productId: item.product_id,
+    productName: item.product_name,
+    productImage: item.image_url || '/products/placeholder.svg',
+    price: Number(item.unit_price),
+    quantity: item.quantity,
   }))
 
   return {
@@ -83,8 +78,7 @@ export function adaptOrderDetails({ order, items, events, delivery }) {
     orderNumber: order.order_number,
     createdAt: order.created_at,
     status: order.status,
-    items: items.map((i) => ({ productId: i.product_id, quantity: i.quantity })),
-    vendorGroups,
+    items: adaptedItems,
     pricing: { subtotal, platformFee, amountDueNow: subtotal + platformFee },
     deliveryFee: order.delivery_fee == null ? null : Number(order.delivery_fee),
     delivery: delivery
@@ -124,7 +118,6 @@ export function adaptTrackedOrder({ order, events }) {
     createdAt: order.created_at,
     status: order.status,
     items: [],
-    vendorGroups: [],
     // Public tracking only exposes the combined grand total, not the
     // subtotal/platform-fee breakdown — those stay null rather than guessed.
     pricing: { subtotal: null, platformFee: null, amountDueNow: order.grand_total == null ? null : Number(order.grand_total) },

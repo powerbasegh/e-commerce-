@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Navigate, useLocation } from 'react-router-dom'
 import Header from '../components/Header.jsx'
 import MobileHeader from '../components/MobileHeader.jsx'
 import Breadcrumbs from '../components/Breadcrumbs.jsx'
@@ -9,12 +9,10 @@ import DeliveryAddressForm from '../components/checkout/DeliveryAddressForm.jsx'
 import DeliveryFeeExplanation from '../components/checkout/DeliveryFeeExplanation.jsx'
 import CheckoutOrderSummary from '../components/checkout/CheckoutOrderSummary.jsx'
 import CheckoutEmptyState from '../components/checkout/CheckoutEmptyState.jsx'
-import { useCart, groupItemsByVendor, computeCartSummary } from '../context/CartContext.jsx'
+import { useCart, computeCartSummary } from '../context/CartContext.jsx'
 import { useAccount } from '../context/AccountContext.jsx'
 import { useAuth } from '../context/AuthContext.jsx'
 import { createEmptyDeliveryDetails, DELIVERY_METHOD } from '../data/deliveryDetails.js'
-import { createOrder, saveOrder } from '../data/orderStorage.js'
-import { NOTIFICATION_TYPE, buildOrderReceivedMessage } from '../constants/notifications.js'
 import { validateFullName, validateEmail, validatePhone, isRequired } from '../utils/validation.js'
 import { api } from '../services/api.js'
 
@@ -50,9 +48,10 @@ function buildInitialCheckoutForm(profile, defaultAddress) {
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const { items, clearCart } = useCart()
-  const { profile, defaultAddress, addNotification, refreshFromApi } = useAccount()
-  const { isAuthenticated } = useAuth()
+  const { profile, defaultAddress, refreshFromApi } = useAccount()
+  const { isAuthenticated, restoring } = useAuth()
 
   const [form, setForm] = useState(() => buildInitialCheckoutForm(profile, defaultAddress))
   // Captured once on mount — used only to show a small "prefilled" note,
@@ -63,8 +62,18 @@ export default function CheckoutPage() {
   const [placing, setPlacing] = useState(false)
   const [placeError, setPlaceError] = useState('')
 
-  const vendorGroups = groupItemsByVendor(items)
   const summary = computeCartSummary(items)
+
+  // Placing an order requires a real, server-authoritative order — the
+  // backend re-verifies products/prices/stock, computes totals itself, and
+  // creates the order under the logged-in customer's account (see
+  // server/src/controllers/orderController.js). There's no guest-order
+  // capability on the backend, so guests are sent to log in first rather
+  // than getting a fake local "order" that no one on the PowerBase side
+  // ever sees.
+  if (!restoring && !isAuthenticated) {
+    return <Navigate to="/login" replace state={{ from: location.pathname }} />
+  }
 
   function updateField(field, fieldValue) {
     setForm((prev) => ({ ...prev, [field]: fieldValue }))
@@ -105,68 +114,41 @@ export default function CheckoutPage() {
     setPlaceError('')
     setPlacing(true)
 
-    // Authenticated customers place a real, server-authoritative order —
-    // the backend re-verifies products/prices/stock and computes totals
-    // itself (never trusts what the browser sends); it also creates the
-    // "order received" notification server-side. Guests keep the exact
-    // local-storage flow this project already had, unchanged.
-    if (isAuthenticated) {
-      try {
-        const { order } = await api.createOrder({
-          items: items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
-          delivery: {
-            address: form.location.address,
-            city: form.location.city,
-            area: form.location.area,
-            landmark: form.location.landmark,
-            latitude: form.location.latitude,
-            longitude: form.location.longitude,
-            instructions: form.deliveryInstructions,
-          },
-          customer: { fullName: form.fullName.trim(), email: form.email.trim(), phone: form.phone.trim() },
-        })
-        clearCart()
-        // Best-effort — pick up the notification the backend just created.
-        // Checkout has already succeeded either way, so a refresh failure
-        // here shouldn't block navigating to the success page.
-        refreshFromApi?.().catch(() => {})
-        navigate(`/order-success/${order.orderNumber}`)
-      } catch (err) {
-        setPlaceError(err.message || 'Could not place your order. Please try again.')
-        setPlacing(false)
-      }
-      return
+    try {
+      const { order } = await api.createOrder({
+        items: items.map((item) => ({ productId: item.productId, quantity: item.quantity })),
+        delivery: {
+          address: form.location.address,
+          city: form.location.city,
+          area: form.location.area,
+          landmark: form.location.landmark,
+          latitude: form.location.latitude,
+          longitude: form.location.longitude,
+          instructions: form.deliveryInstructions,
+        },
+        customer: { fullName: form.fullName.trim(), email: form.email.trim(), phone: form.phone.trim() },
+      })
+      clearCart()
+      // Best-effort — pick up the notification the backend just created.
+      // Checkout has already succeeded either way, so a refresh failure
+      // here shouldn't block navigating to the success page.
+      refreshFromApi?.().catch(() => {})
+      navigate(`/order-success/${order.orderNumber}`)
+    } catch (err) {
+      setPlaceError(err.message || 'Could not place your order. Please try again.')
+      setPlacing(false)
     }
-
-    const order = createOrder({
-      customerInfo: { fullName: form.fullName.trim(), email: form.email.trim(), phone: form.phone.trim() },
-      deliveryLocation: form.location,
-      deliveryInstructions: form.deliveryInstructions,
-      items,
-      vendorGroups,
-      pricing: summary,
-    })
-    saveOrder(order)
-    // Real event → real in-app notification (never fabricated), matching
-    // the exact "ORDER UPDATE / Your order ... has been received." example.
-    addNotification({
-      type: NOTIFICATION_TYPE.ORDER_UPDATE,
-      title: `Order ${order.orderNumber}`,
-      message: buildOrderReceivedMessage({ orderNumber: order.orderNumber }),
-    })
-    clearCart()
-    navigate(`/order-success/${order.orderNumber}`)
   }
 
   if (items.length === 0) {
     return (
       <div className="min-h-screen bg-pb-gray-bg">
-        <Header notificationCount={3} activePath="" />
+        <Header activePath="" />
         <div className="mx-auto hidden max-w-[1400px] px-6 py-6 lg:block">
           <CheckoutEmptyState />
         </div>
         <div className="lg:hidden">
-          <MobileHeader notificationCount={3} />
+          <MobileHeader />
           <main className="px-4 pt-3 pb-6">
             <CheckoutEmptyState />
           </main>
@@ -180,7 +162,7 @@ export default function CheckoutPage() {
       {/* ------------------------------------------------------------------ */}
       {/* Desktop layout                                                      */}
       {/* ------------------------------------------------------------------ */}
-      <Header notificationCount={3} activePath="" />
+      <Header activePath="" />
 
       <div className="mx-auto hidden max-w-[1400px] flex-col gap-5 px-6 py-6 lg:flex">
         <div className="flex flex-col gap-2">
@@ -216,7 +198,7 @@ export default function CheckoutPage() {
               <p className="rounded-lg bg-red-50 p-3 text-sm text-pb-red">{placeError}</p>
             )}
             <CheckoutOrderSummary
-              vendorGroups={vendorGroups}
+              items={items}
               summary={summary}
               confirmChecked={confirmChecked}
               onToggleConfirm={setConfirmChecked}
@@ -233,7 +215,7 @@ export default function CheckoutPage() {
       {/* same pattern as Cart/Product Details                               */}
       {/* ------------------------------------------------------------------ */}
       <div className="lg:hidden">
-        <MobileHeader notificationCount={3} />
+        <MobileHeader />
 
         <main className="flex flex-col gap-4 px-4 pb-28 pt-3">
           <h1 className="text-lg font-bold text-pb-gray-text">Checkout</h1>
@@ -261,7 +243,7 @@ export default function CheckoutPage() {
             <p className="rounded-lg bg-red-50 p-3 text-sm text-pb-red">{placeError}</p>
           )}
           <CheckoutOrderSummary
-            vendorGroups={vendorGroups}
+            items={items}
             summary={summary}
             confirmChecked={confirmChecked}
             onToggleConfirm={setConfirmChecked}

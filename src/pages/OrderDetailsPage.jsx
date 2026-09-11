@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import Header from '../components/Header.jsx'
 import MobileHeader from '../components/MobileHeader.jsx'
@@ -5,12 +6,15 @@ import Breadcrumbs from '../components/Breadcrumbs.jsx'
 import OrderNotFound from '../components/orders/OrderNotFound.jsx'
 import OrderStatusBadge from '../components/orders/OrderStatusBadge.jsx'
 import OrderStatusTimeline from '../components/orders/OrderStatusTimeline.jsx'
-import OrderVendorGroup from '../components/orders/OrderVendorGroup.jsx'
+import OrderItemsList from '../components/orders/OrderItemsList.jsx'
 import OrderFinancialSummary from '../components/orders/OrderFinancialSummary.jsx'
 import OrderDeliveryInfo from '../components/orders/OrderDeliveryInfo.jsx'
 import OrderActivity from '../components/orders/OrderActivity.jsx'
 import OrderActions from '../components/orders/OrderActions.jsx'
 import { getOrderByNumber } from '../data/orderStorage.js'
+import { useAuth } from '../context/AuthContext.jsx'
+import { api } from '../services/api.js'
+import { adaptOrderDetails } from '../data/orderApiAdapter.js'
 import { ORDER_STATUS_DESCRIPTION } from '../constants/orderStatus.js'
 
 function formatOrderDate(isoString) {
@@ -23,21 +27,74 @@ function formatOrderDate(isoString) {
 
 export default function OrderDetailsPage() {
   const { orderNumber } = useParams()
-  const order = getOrderByNumber(orderNumber)
+  const { isAuthenticated } = useAuth()
+
+  // Logged-in customers fetch their real order from the backend — the
+  // server re-verifies req.user owns the order_number before returning
+  // anything (see orderController.getMine) — never trust/display an order
+  // purely from client-side storage for an authenticated customer. Guests
+  // keep the existing local-storage flow exactly as before.
+  const [order, setOrder] = useState(() => (isAuthenticated ? null : getOrderByNumber(orderNumber)))
+  const [loading, setLoading] = useState(isAuthenticated)
+  const [loadError, setLoadError] = useState(false)
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setOrder(getOrderByNumber(orderNumber))
+      setLoading(false)
+      setLoadError(false)
+      return
+    }
+    let cancelled = false
+    setLoading(true)
+    setLoadError(false)
+    api
+      .getOrderById(orderNumber)
+      .then((data) => {
+        if (cancelled) return
+        setOrder(adaptOrderDetails(data))
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setOrder(null)
+          setLoadError(true)
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false)
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [isAuthenticated, orderNumber])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-pb-gray-bg">
+        <Header activePath="" />
+        <div className="mx-auto max-w-[1400px] px-6 py-10 text-sm text-pb-gray-muted">Loading your order…</div>
+      </div>
+    )
+  }
 
   if (!order) {
     return (
       <div className="min-h-screen bg-pb-gray-bg">
-        <Header notificationCount={3} activePath="" />
+        <Header activePath="" />
         <div className="mx-auto hidden max-w-[1400px] px-6 py-10 lg:block">
           <OrderNotFound orderNumber={orderNumber} />
         </div>
         <div className="lg:hidden">
-          <MobileHeader notificationCount={3} />
+          <MobileHeader />
           <main className="px-4 py-6">
             <OrderNotFound orderNumber={orderNumber} />
           </main>
         </div>
+        {loadError && (
+          <p className="mx-auto max-w-[1400px] px-6 pb-6 text-center text-xs text-pb-gray-muted lg:text-left">
+            We couldn't load this order right now. Please try again in a moment.
+          </p>
+        )}
       </div>
     )
   }
@@ -54,7 +111,7 @@ export default function OrderDetailsPage() {
       {/* ------------------------------------------------------------------ */}
       {/* Desktop layout                                                      */}
       {/* ------------------------------------------------------------------ */}
-      <Header notificationCount={3} activePath="" />
+      <Header activePath="" />
 
       <div className="mx-auto hidden max-w-[1400px] flex-col gap-5 px-6 py-6 lg:flex">
         <Breadcrumbs items={breadcrumbItems} />
@@ -81,9 +138,7 @@ export default function OrderDetailsPage() {
             <OrderActivity events={order.events} />
 
             <div className="flex flex-col gap-4">
-              {order.vendorGroups.map((group) => (
-                <OrderVendorGroup key={group.vendor.id} group={group} />
-              ))}
+              <OrderItemsList items={order.items} />
             </div>
           </div>
 
@@ -108,7 +163,7 @@ export default function OrderDetailsPage() {
       {/* order rather than a shrunk two-column desktop layout               */}
       {/* ------------------------------------------------------------------ */}
       <div className="lg:hidden">
-        <MobileHeader notificationCount={3} />
+        <MobileHeader />
 
         <main className="flex flex-col gap-4 px-4 pb-8 pt-3">
           <Breadcrumbs items={breadcrumbItems} />
@@ -134,9 +189,7 @@ export default function OrderDetailsPage() {
             <OrderFinancialSummary order={order} />
           </section>
 
-          {order.vendorGroups.map((group) => (
-            <OrderVendorGroup key={group.vendor.id} group={group} />
-          ))}
+          <OrderItemsList items={order.items} />
 
           <OrderDeliveryInfo delivery={order.delivery} />
           <OrderActivity events={order.events} />

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { ORDER_STATUS } from '../../constants/orderStatus.js'
-import { getProductById } from '../../data/mockData.js'
+import { api } from '../../services/api.js'
 import { useCart } from '../../context/CartContext.jsx'
 
 export default function OrderActions({ order }) {
@@ -11,11 +11,18 @@ export default function OrderActions({ order }) {
 
   async function handleBuyAgain() {
     setBuyingAgain(true)
-    // Re-look-up each product by id rather than trusting the order's
-    // snapshotted price/stock, since both may have changed since the order
-    // was placed. Products that no longer exist are skipped rather than
-    // failing the whole action.
-    const lookups = await Promise.all(order.items.map((item) => getProductById(item.productId)))
+    // Re-look-up each product from the real product API rather than
+    // trusting the order's snapshotted price/stock, since both may have
+    // changed since the order was placed. Products that no longer exist
+    // (or errors) are skipped rather than failing the whole action.
+    const lookups = await Promise.all(
+      order.items.map((item) =>
+        api
+          .getProduct(item.productId)
+          .then((data) => data.product)
+          .catch(() => null),
+      ),
+    )
     lookups.forEach((product, i) => {
       if (product) addItem(product, order.items[i].quantity)
     })

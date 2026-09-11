@@ -1,5 +1,7 @@
 INSERT IGNORE INTO categories (id,name) VALUES
-('electronics','Electronics'),('fashion','Fashion'),('home-living','Home & Living');
+('electronics','Electronics'),('fashion','Fashion'),('home-living','Home & Living'),
+('computing','Computing'),('beauty','Beauty & Personal Care'),('health','Health & Wellness'),
+('groceries','Groceries'),('books','Books & Stationery'),('automotive','Automotive');
 
 INSERT IGNORE INTO vendors (id,store_name,rating,location,verified,default_share_percent) VALUES
 (1,'TechNova Store',4.70,'Accra, Ghana',1,80.00),

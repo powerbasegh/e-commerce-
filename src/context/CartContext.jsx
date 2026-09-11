@@ -12,8 +12,9 @@ import { PLATFORM_FEE_GHS } from '../config/pricing.js'
 //   productId, productName, productImage,
 //   price, oldPrice,
 //   quantity, stockQuantity,
-//   vendor: { id, name }   // public storefront info only
 // }
+// No vendor identity is stored here — the backend derives the vendor from
+// the product itself when it processes an order (see orderController.js).
 //
 // Persistence: the cart is mirrored to localStorage under CART_STORAGE_KEY
 // so it survives a refresh. This is a deliberately thin persistence layer —
@@ -59,9 +60,7 @@ function loadPersistedCart() {
         item &&
         typeof item.productId === 'string' &&
         typeof item.price === 'number' &&
-        typeof item.quantity === 'number' &&
-        item.vendor &&
-        typeof item.vendor.id === 'string',
+        typeof item.quantity === 'number',
     )
   } catch {
     return []
@@ -107,7 +106,6 @@ function cartReducer(state, action) {
         oldPrice: product.oldPrice ?? null,
         quantity: clampQuantityToStock(quantity, product.stock),
         stockQuantity: product.stock,
-        vendor: { id: product.vendor.id, name: product.vendor.name },
       }
       return [...state, newItem]
     }
@@ -195,28 +193,6 @@ export function useCart() {
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
   return { items, totalCount, subtotal, ...actions }
-}
-
-/**
- * Groups cart items by vendor for the multi-vendor cart display. PowerBase
- * supports one cart with products from several vendors, grouped visually —
- * never split into separate per-vendor checkout pages.
- */
-export function groupItemsByVendor(items) {
-  const groups = new Map()
-
-  for (const item of items) {
-    const key = item.vendor.id
-    if (!groups.has(key)) {
-      groups.set(key, { vendor: item.vendor, items: [] })
-    }
-    groups.get(key).items.push(item)
-  }
-
-  return Array.from(groups.values()).map((group) => ({
-    ...group,
-    subtotal: group.items.reduce((sum, item) => sum + item.price * item.quantity, 0),
-  }))
 }
 
 /**

@@ -10,9 +10,9 @@
 //
 // PRIVACY: the order object stored here is the customer/PowerBase-admin
 // view and includes full delivery details (exact address, coordinates,
-// contact info). `vendorGroups` on the order only ever carries what
-// groupItemsByVendor() already produces — vendor id/name, items, subtotal —
-// never the customer's contact or exact location. If/when this data is sent
+// contact info). It is intentionally a flat PowerBase order — no vendor
+// grouping/labels — matching the same shape customer-facing backend order
+// endpoints return (see orderController.getMine). If/when this data is sent
 // to a vendor-facing surface, use getVendorSafeDeliveryInfo() from
 // src/data/deliveryDetails.js rather than forwarding `delivery` directly.
 // ---------------------------------------------------------------------------
@@ -91,7 +91,7 @@ function generateEventId() {
  * PowerBase Admin sets it; `deliveryFeeQuotedAt`/`deliveryFeeNotes` are
  * prepared for that same future step.
  */
-export function createOrder({ customerInfo, deliveryLocation, deliveryInstructions, items, vendorGroups, pricing }) {
+export function createOrder({ customerInfo, deliveryLocation, deliveryInstructions, items, pricing }) {
   const existingOrders = loadPersistedOrders()
   const now = new Date().toISOString()
 
@@ -114,7 +114,6 @@ export function createOrder({ customerInfo, deliveryLocation, deliveryInstructio
       instructions: deliveryInstructions || '',
     },
     items,
-    vendorGroups,
     pricing: {
       subtotal: pricing.subtotal,
       platformFee: pricing.platformFee,
