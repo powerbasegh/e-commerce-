@@ -19,6 +19,13 @@ CREATE TABLE IF NOT EXISTS vendors (
   location VARCHAR(180) DEFAULT '',
   verified BOOLEAN NOT NULL DEFAULT FALSE,
   default_share_percent DECIMAL(5,2) NOT NULL DEFAULT 80.00,
+  contact_email VARCHAR(190) NULL,
+  contact_phone VARCHAR(40) NULL,
+  description VARCHAR(1000) NULL,
+  payout_method ENUM('MOMO_MTN','MOMO_TELECEL','MOMO_AT','BANK') NULL,
+  payout_account_name VARCHAR(160) NULL,
+  payout_account_number VARCHAR(64) NULL,
+  payout_bank_name VARCHAR(160) NULL,
   is_active BOOLEAN NOT NULL DEFAULT TRUE,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
@@ -37,6 +44,8 @@ CREATE TABLE IF NOT EXISTS products (
   price DECIMAL(12,2) NOT NULL,
   old_price DECIMAL(12,2) NULL,
   stock_quantity INT UNSIGNED NOT NULL DEFAULT 0,
+  reserved_quantity INT UNSIGNED NOT NULL DEFAULT 0,
+  sku VARCHAR(64) NULL,
   image_url VARCHAR(500) NULL,
   description TEXT NULL,
   vendor_share_percent DECIMAL(5,2) NULL,
@@ -109,6 +118,7 @@ CREATE TABLE IF NOT EXISTS order_items (
   unit_price DECIMAL(12,2) NOT NULL,
   quantity INT UNSIGNED NOT NULL,
   line_total DECIMAL(12,2) NOT NULL,
+  stock_state ENUM('RESERVED','COMMITTED','RELEASED') NOT NULL DEFAULT 'RESERVED',
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
   FOREIGN KEY (vendor_order_id) REFERENCES vendor_orders(id) ON DELETE CASCADE,
@@ -159,3 +169,6 @@ CREATE TABLE IF NOT EXISTS notifications (
 CREATE INDEX idx_orders_user_created ON orders(user_id,created_at);
 CREATE INDEX idx_vendor_orders_vendor ON vendor_orders(vendor_id,created_at);
 CREATE INDEX idx_notifications_user_created ON notifications(user_id,created_at);
+CREATE UNIQUE INDEX uq_products_vendor_sku ON products(vendor_id, sku);
+CREATE INDEX idx_products_vendor_active ON products(vendor_id,is_active);
+CREATE INDEX idx_order_items_stock_state ON order_items(stock_state);

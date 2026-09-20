@@ -14,7 +14,14 @@ export default function LoginPage() {
   const [submitting, setSubmitting] = useState(false)
   const [serverError, setServerError] = useState('')
 
-  const redirectTo = location.state?.from || '/account'
+  const redirectTo = location.state?.from
+
+  function destinationFor(user) {
+    if (redirectTo) return redirectTo
+    if (user?.role === 'VENDOR') return '/vendor'
+    if (user?.role === 'ADMIN') return '/admin'
+    return '/account'
+  }
 
   function validate() {
     const next = {
@@ -32,8 +39,8 @@ export default function LoginPage() {
     if (!validate()) return
     setSubmitting(true)
     try {
-      await login({ email: email.trim(), password })
-      navigate(redirectTo, { replace: true })
+      const user = await login({ email: email.trim(), password })
+      navigate(destinationFor(user), { replace: true })
     } catch (err) {
       setServerError(err.message || 'Could not log in')
     } finally {

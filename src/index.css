@@ -29,3 +29,13 @@ input:focus-visible {
   outline: 2px solid #0e9e28;
   outline-offset: 2px;
 }
+
+/* Shared form-field styling for the Vendor/Admin internal tools (see
+   src/pages/vendor and src/pages/admin) — kept out of components so plain
+   <input>/<select>/<textarea> elements can opt in with className="input". */
+.input {
+  @apply w-full rounded-lg border border-pb-gray-border bg-white px-3 py-2.5 text-sm text-pb-gray-text outline-none transition-colors;
+}
+.input:focus {
+  @apply border-pb-green;
+}

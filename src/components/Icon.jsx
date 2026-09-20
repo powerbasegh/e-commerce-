@@ -266,6 +266,44 @@ const paths = {
       <path d="M12 13v8" />
     </>
   ),
+  inventory: (
+    <>
+      <rect x="3" y="3" width="7" height="7" rx="1" />
+      <rect x="14" y="3" width="7" height="7" rx="1" />
+      <rect x="3" y="14" width="7" height="7" rx="1" />
+      <rect x="14" y="14" width="7" height="7" rx="1" />
+    </>
+  ),
+  wallet: (
+    <>
+      <path d="M3 7a2 2 0 0 1 2-2h13a1 1 0 0 1 1 1v3" />
+      <path d="M3 7v11a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1v-4" />
+      <path d="M16 13h4a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a2 2 0 0 1 0-4Z" />
+    </>
+  ),
+  receipt: (
+    <>
+      <path d="M6 2h12v18l-3-2-3 2-3-2-3 2V2Z" />
+      <line x1="9" y1="7" x2="15" y2="7" />
+      <line x1="9" y1="11" x2="15" y2="11" />
+    </>
+  ),
+  chart: (
+    <>
+      <line x1="4" y1="20" x2="20" y2="20" />
+      <rect x="6" y="12" width="3" height="6" />
+      <rect x="11" y="7" width="3" height="11" />
+      <rect x="16" y="3" width="3" height="15" />
+    </>
+  ),
+  store: (
+    <>
+      <path d="M3 9 4 4h16l1 5" />
+      <path d="M3 9a2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0 2 2 0 0 0 4 0" />
+      <path d="M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9" />
+      <path d="M9 20v-5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5" />
+    </>
+  ),
 }
 
 export default function Icon({ name, size = 20, strokeWidth = 1.8, className = '', filled = false }) {
