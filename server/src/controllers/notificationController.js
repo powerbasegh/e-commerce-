@@ -9,6 +9,15 @@ exports.listMine = async (req, res) => {
   res.json({ notifications: rows });
 };
 
+
+exports.unreadCount = async (req, res) => {
+  const [rows] = await db.execute(
+    'SELECT COUNT(*) AS unread_count FROM notifications WHERE user_id = ? AND is_read = FALSE',
+    [req.user.id],
+  );
+  res.json({ unreadCount: Number(rows[0]?.unread_count || 0) });
+};
+
 exports.markRead = async (req, res) => {
   const id = Number(req.params.id);
   if (!Number.isInteger(id) || id < 1) return res.status(400).json({ message: 'Invalid notification ID' });

@@ -254,7 +254,7 @@ export default function AdminOrderDetailPage() {
             ) : (
               <form onSubmit={submitPayment} className="space-y-3">
                 <p className="text-xs text-pb-gray-muted">
-                  Record the real outcome from your payment provider (Paystack/Hubtel/etc.). This is the only way payments.status can become PAID — nothing in the customer or vendor apps can do this.
+                  Record the real outcome from your payment provider (Paystack). This is the only way payments.status can become PAID — nothing in the customer or vendor apps can do this.
                 </p>
                 <label className="block text-sm font-medium text-pb-gray-text">
                   Outcome

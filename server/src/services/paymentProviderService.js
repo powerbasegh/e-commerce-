@@ -1,17 +1,13 @@
-// The provider registry. paymentService talks only to this file, never to
-// server/src/services/providers/hubtelProvider.js directly — adding a
-// second provider (e.g. Paystack) means adding one more entry here and one
-// more file under providers/, not touching paymentService, orderController,
-// stockService, orderStateService or settlement logic.
-const hubtelProvider = require('./providers/hubtelProvider');
-const hubtelConfig = require('../config/hubtelConfig');
+const paystackProvider = require('./providers/paystackProvider');
+const paystackConfig = require('../config/paystackConfig');
 
 const PROVIDERS = {
-  HUBTEL: {
-    isEnabled: hubtelConfig.isEnabled,
-    initiateCheckout: (args) => hubtelProvider.initiateCheckout(hubtelConfig.config(), args),
-    normalizeCallbackPayload: hubtelProvider.normalizeCallbackPayload,
-    verifyPayment: hubtelProvider.verifyPayment,
+  PAYSTACK: {
+    isEnabled: paystackConfig.isEnabled,
+    initiateCheckout: (args) => paystackProvider.initiateCheckout(paystackConfig.config(), args),
+    verifyPayment: (reference) => paystackProvider.verifyPayment(paystackConfig.config(), reference),
+    normalizeWebhookPayload: paystackProvider.normalizeWebhookPayload,
+    verifyWebhookSignature: (rawBody, signature) => paystackProvider.verifyWebhookSignature(rawBody, signature, paystackConfig.config().secretKey),
   },
 };
 

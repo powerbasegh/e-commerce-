@@ -110,7 +110,7 @@ export default function AdminPaymentsPage() {
           </table>
         </div>
       )}
-      <p className="mt-3 text-xs text-pb-gray-muted">Payments are recorded from your real provider's outcome (Paystack/Hubtel/etc.) on the order detail page — nothing here can mark a payment PAID by itself.</p>
+      <p className="mt-3 text-xs text-pb-gray-muted">Payments are recorded from your real provider's outcome (Paystack) on the order detail page — nothing here can mark a payment PAID by itself.</p>
     </AdminLayout>
   )
 }

@@ -11,7 +11,7 @@ export default function HomePromoPanel() {
     <aside className="hidden 2xl:block" aria-label="Shopping highlights">
       <div className="h-full rounded-xl border border-pb-gray-border bg-white p-5 shadow-card">
         <div className="mb-5">
-          <p className="text-[17px] font-extrabold text-pb-gray-text">Big Savings Today! <span aria-hidden="true">🔥</span></p>
+          <p className="text-[17px] font-extrabold text-pb-gray-text">Big Savings Today</p>
           <p className="mt-1 text-xs text-pb-gray-muted">Grab deals up to 50% off</p>
         </div>
 

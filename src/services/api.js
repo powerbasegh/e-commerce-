@@ -32,11 +32,11 @@ export const api = {
   getOrderById: (id) => request(`/orders/${encodeURIComponent(id)}`),
   trackOrder: (reference) => request(`/orders/track/${encodeURIComponent(reference)}`, { headers: { 'Content-Type': 'application/json' } }),
   // Payment: getPayment is safe to poll (no side effects). initiatePayment is
-  // idempotent server-side (see server/src/services/paymentService.js) — a
-  // double-click or a retry after a network error returns the same
-  // checkout link rather than opening a second Hubtel checkout.
+  // idempotent server-side. verifyPayment checks the Paystack reference on
+  // the server before any successful payment is applied to the order.
   getPayment: (orderNumber) => request(`/payments/orders/${encodeURIComponent(orderNumber)}`),
   initiatePayment: (orderNumber) => request(`/payments/orders/${encodeURIComponent(orderNumber)}/initiate`, { method: 'POST' }),
+  verifyPayment: (orderNumber, reference) => request(`/payments/orders/${encodeURIComponent(orderNumber)}/verify?reference=${encodeURIComponent(reference)}`),
   getVendorOrders: (params = {}) => {
     const query = new URLSearchParams(Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== '')).toString()
     return request(`/orders/vendor/my-orders${query ? `?${query}` : ''}`)
@@ -45,8 +45,16 @@ export const api = {
   updateVendorOrderStatus: (vendorOrderId, status) => request(`/orders/vendor/my-orders/${encodeURIComponent(vendorOrderId)}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
   getVendorSettlements: () => request('/orders/vendor/my-settlements'),
   getNotifications: () => request('/notifications'),
+  getNotificationUnreadCount: () => request('/notifications/unread-count'),
   markNotificationRead: (id) => request(`/notifications/${encodeURIComponent(id)}/read`, { method: 'PUT' }),
   markAllNotificationsRead: () => request('/notifications/read-all', { method: 'PUT' }),
+  createDeliveryRequest: (payload) => request('/delivery', { method: 'POST', body: JSON.stringify(payload) }),
+  getMyDeliveries: () => request('/delivery'),
+  getMyDelivery: (id) => request(`/delivery/${encodeURIComponent(id)}`),
+  getSupportTickets: () => request('/support'),
+  createSupportTicket: (payload) => request('/support', { method: 'POST', body: JSON.stringify(payload) }),
+  getSupportTicket: (id) => request(`/support/${encodeURIComponent(id)}`),
+  replySupportTicket: (id, message) => request(`/support/${encodeURIComponent(id)}/messages`, { method: 'POST', body: JSON.stringify({ message }) }),
   checkDatabase: () => request('/health/db', { headers: {} }),
   getProducts: (params = {}) => {
     const query = new URLSearchParams(
@@ -55,6 +63,7 @@ export const api = {
     return request(`/products${query ? `?${query}` : ''}`)
   },
   getProduct: (id) => request(`/products/${encodeURIComponent(id)}`),
+  createProductReview: (id, payload) => request(`/products/${encodeURIComponent(id)}/reviews`, { method: 'POST', body: JSON.stringify(payload) }),
   getCategories: () => request('/products/categories'),
 
   // -- Vendor dashboard/profile/products/earnings --------------------------
@@ -129,6 +138,19 @@ export const api = {
   // Manual trigger for the same expired-reservation sweep that already runs
   // on a timer in the live server process (see server/src/server.js).
   runAdminReservationSweep: (hours) => request('/admin/reservations/expire', { method: 'POST', body: JSON.stringify(hours === undefined || hours === '' ? {} : { hours: Number(hours) }) }),
+
+  getAdminDeliveryRequests: (params = {}) => { const query = new URLSearchParams(Object.entries(params).filter(([,v]) => v !== undefined && v !== null && v !== '')).toString(); return request(`/admin/delivery${query ? `?${query}` : ''}`) },
+  getAdminDeliveryAnalytics: () => request('/admin/delivery/analytics'),
+  quoteAdminDeliveryRequest: (id, quotedFee) => request(`/admin/delivery/${encodeURIComponent(id)}/quote`, { method: 'PATCH', body: JSON.stringify({ quotedFee }) }),
+  assignAdminDeliveryRider: (id, payload) => request(`/admin/delivery/${encodeURIComponent(id)}/assign`, { method: 'PATCH', body: JSON.stringify(payload) }),
+  updateAdminDeliveryStatus: (id, status) => request(`/admin/delivery/${encodeURIComponent(id)}/status`, { method: 'PATCH', body: JSON.stringify({ status }) }),
+  getAdminSupportTickets: (params = {}) => {
+    const query = new URLSearchParams(Object.entries(params).filter(([, v]) => v !== undefined && v !== null && v !== '')).toString()
+    return request(`/admin/support${query ? `?${query}` : ''}`)
+  },
+  getAdminSupportTicket: (id) => request(`/admin/support/${encodeURIComponent(id)}`),
+  replyAdminSupportTicket: (id, message) => request(`/admin/support/${encodeURIComponent(id)}/messages`, { method: 'POST', body: JSON.stringify({ message }) }),
+  updateAdminSupportTicket: (id, payload) => request(`/admin/support/${encodeURIComponent(id)}`, { method: 'PATCH', body: JSON.stringify(payload) }),
 
   getAdminCategories: () => request('/admin/categories'),
   createAdminCategory: (name) => request('/admin/categories', { method: 'POST', body: JSON.stringify({ name }) }),

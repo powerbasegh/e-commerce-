@@ -5,6 +5,7 @@ const { authenticate } = require('../middleware/auth');
 
 router.use(authenticate);
 router.get('/', asyncHandler(controller.listMine));
+router.get('/unread-count', asyncHandler(controller.unreadCount));
 router.put('/:id/read', asyncHandler(controller.markRead));
 router.put('/read-all', asyncHandler(controller.markAllRead));
 

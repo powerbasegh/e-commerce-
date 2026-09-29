@@ -15,6 +15,10 @@ import AccountAddressesPage from './pages/AccountAddressesPage.jsx'
 import AccountOrdersPage from './pages/AccountOrdersPage.jsx'
 import AccountNotificationsPage from './pages/AccountNotificationsPage.jsx'
 import AccountSettingsPage from './pages/AccountSettingsPage.jsx'
+import SupportPage from './pages/SupportPage.jsx'
+import DeliveryRequestPage from './pages/DeliveryRequestPage.jsx'
+import AdminDeliveryServicePage from './pages/admin/AdminDeliveryServicePage.jsx'
+import AdminSupportPage from './pages/admin/AdminSupportPage.jsx'
 import AdminDashboardPage from './pages/admin/AdminDashboardPage.jsx'
 import AdminOrdersPage from './pages/admin/AdminOrdersPage.jsx'
 import AdminOrderDetailPage from './pages/admin/AdminOrderDetailPage.jsx'
@@ -46,8 +50,8 @@ import { RequireRole } from './components/RouteGuards.jsx'
 // Tracking, Customer Account/Profile, real authentication, a full Vendor UI,
 // and a full Admin UI (orders, payments, delivery, settlements, vendors,
 // customers, products, categories, notifications, settings) are wired up.
-// Real payment-provider integration (Paystack/Hubtel) and refund automation
-// are still out of scope — see PROJECT_NOTES.md and AdminPaymentsPage.jsx.
+// Paystack payment integration is wired into the backend; refund automation
+// is still out of scope — see PROJECT_NOTES.md and AdminPaymentsPage.jsx.
 //
 // Route order below is for readability only — React Router v6 ranks a
 // static path segment ('/orders/track') higher than a dynamic one
@@ -78,6 +82,8 @@ export default function App() {
       <Route path="/account/orders" element={<AccountOrdersPage />} />
       <Route path="/account/notifications" element={<AccountNotificationsPage />} />
       <Route path="/account/settings" element={<AccountSettingsPage />} />
+      <Route path="/account/support" element={<SupportPage />} />
+      <Route path="/delivery" element={<RequireRole role="CUSTOMER"><DeliveryRequestPage /></RequireRole>} />
       {/* Admin area — every route requires an authenticated ADMIN; the
           backend independently enforces the same role on every /api/admin
           endpoint (see server/src/middleware/auth.js and adminRoutes.js). */}
@@ -110,6 +116,14 @@ export default function App() {
         element={
           <RequireRole role="ADMIN">
             <AdminPaymentsPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path="/admin/delivery-service"
+        element={
+          <RequireRole role="ADMIN">
+            <AdminDeliveryServicePage />
           </RequireRole>
         }
       />
@@ -191,6 +205,14 @@ export default function App() {
         element={
           <RequireRole role="ADMIN">
             <AdminNotificationsPage />
+          </RequireRole>
+        }
+      />
+      <Route
+        path="/admin/support"
+        element={
+          <RequireRole role="ADMIN">
+            <AdminSupportPage />
           </RequireRole>
         }
       />

@@ -45,3 +45,11 @@ Frontend:
 
 Backend:
 `CLIENT_URL=https://<powerbase-frontend-render-host>` plus the TiDB and JWT variables documented in `server/.env.example`.
+
+## PowerBase Delivery MVP
+- Added `/delivery` customer request flow for point-to-point package delivery.
+- Added `/admin/delivery-service` for quoting, rider assignment, lifecycle management and delivery analytics.
+- Delivery requests are separate from marketplace orders and never expose vendor information.
+- Fee quoting is manual in this MVP; no GPS-distance pricing is performed automatically.
+- Rider fields are operational assignment data only. A dedicated rider login/tracking app remains a later phase.
+- Paystack payment for standalone delivery requests is intentionally not faked; the existing marketplace Paystack flow remains unchanged. Standalone delivery payment should be wired to a dedicated delivery payment record/webhook before accepting production delivery fees.

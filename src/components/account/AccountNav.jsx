@@ -7,6 +7,7 @@ export const ACCOUNT_NAV_ITEMS = [
   { id: 'orders', label: 'My Orders', href: '/account/orders', icon: 'orders' },
   { id: 'addresses', label: 'Saved Addresses', href: '/account/addresses', icon: 'location' },
   { id: 'notifications', label: 'Notifications', href: '/account/notifications', icon: 'bell' },
+  { id: 'support', label: 'Support', href: '/account/support', icon: 'support' },
   { id: 'settings', label: 'Settings', href: '/account/settings', icon: 'settings' },
 ]
 

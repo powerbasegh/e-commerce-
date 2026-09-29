@@ -38,31 +38,11 @@ export default function ProfileForm() {
     setSaved(true)
   }
 
-  const initials = form.fullName
-    ? form.fullName
-        .split(' ')
-        .filter(Boolean)
-        .map((n) => n[0])
-        .slice(0, 2)
-        .join('')
-        .toUpperCase()
-    : null
-
   return (
     <form
       onSubmit={handleSave}
       className="flex flex-col gap-4 rounded-card border border-pb-gray-border bg-white p-4 shadow-card sm:p-5"
     >
-      <div className="flex items-center gap-3">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-pb-green-light text-lg font-bold text-pb-green-dark">
-          {initials ?? '👤'}
-        </span>
-        <div>
-          <p className="text-sm font-semibold text-pb-gray-text">Profile Photo</p>
-          <p className="text-xs text-pb-gray-muted">Photo uploads are coming soon.</p>
-        </div>
-      </div>
-
       <FormField label="Full Name" required error={errors.fullName}>
         <input
           type="text"

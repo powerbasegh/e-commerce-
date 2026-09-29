@@ -13,8 +13,7 @@ const db = require('../config/db');
 // identify or expose a vendor to a customer (see PROJECT_NOTES.md /
 // orderController.getMine for the same rule applied to orders).
 //
-// No ratings/reviews table exists, so none is selected or returned here —
-// the frontend must not invent one.
+// Reviews are stored separately and only published reviews are exposed publicly.
 // ---------------------------------------------------------------------------
 
 const SORTS = {
@@ -111,8 +110,58 @@ exports.getById = async (req, res) => {
     'SELECT label, value FROM product_specs WHERE product_id = ? ORDER BY id ASC',
     [req.params.id],
   );
+  const [reviewRows] = await db.execute(
+    `SELECT r.id, r.rating, r.comment, r.created_at, u.full_name AS author
+     FROM product_reviews r JOIN users u ON u.id = r.user_id
+     WHERE r.product_id = ? AND r.status = 'PUBLISHED'
+     ORDER BY r.created_at DESC LIMIT 30`,
+    [req.params.id],
+  );
+  const [summaryRows] = await db.execute(
+    `SELECT COUNT(*) AS total, COALESCE(AVG(rating),0) AS average
+     FROM product_reviews WHERE product_id = ? AND status = 'PUBLISHED'`,
+    [req.params.id],
+  );
+  const total = Number(summaryRows[0].total);
+  const average = Number(summaryRows[0].average);
+  const breakdownRows = await db.execute(
+    `SELECT rating, COUNT(*) AS count FROM product_reviews
+     WHERE product_id = ? AND status = 'PUBLISHED' GROUP BY rating`,
+    [req.params.id],
+  );
+  const counts = Object.fromEntries(breakdownRows[0].map((r) => [Number(r.rating), Number(r.count)]));
+  const reviews = reviewRows.map((r) => ({
+    id: r.id, rating: Number(r.rating), comment: r.comment, author: r.author || 'PowerBase customer',
+    verified: true, createdAt: r.created_at,
+  }));
+  res.json({ product: { ...toPublicProduct(rows[0]), specs, reviews: {
+    average, total, breakdown: [5,4,3,2,1].map((stars) => ({ stars, count: counts[stars] || 0, percent: total ? Math.round(((counts[stars] || 0) / total) * 100) : 0 })), reviews
+  } } });
+};
 
-  res.json({ product: { ...toPublicProduct(rows[0]), specs } });
+exports.createReview = async (req, res) => {
+  const productId = String(req.params.id || '').trim();
+  const rating = Number(req.body.rating);
+  const comment = String(req.body.comment || '').trim();
+  if (!productId || !Number.isInteger(rating) || rating < 1 || rating > 5) return res.status(400).json({ message: 'Rating must be between 1 and 5' });
+  if (comment.length < 3 || comment.length > 2000) return res.status(400).json({ message: 'Review must be between 3 and 2000 characters' });
+
+  const [products] = await db.execute('SELECT id FROM products WHERE id = ? AND is_active = 1 LIMIT 1', [productId]);
+  if (!products.length) return res.status(404).json({ message: 'Product not found' });
+  const [eligible] = await db.execute(
+    `SELECT oi.order_id FROM order_items oi JOIN orders o ON o.id = oi.order_id
+     WHERE oi.product_id = ? AND o.user_id = ? AND o.status = 'DELIVERED' LIMIT 1`,
+    [productId, req.user.id],
+  );
+  if (!eligible.length) return res.status(403).json({ message: 'You can review a product after a delivered order containing it' });
+  const orderId = eligible[0].order_id;
+  try {
+    await db.execute('INSERT INTO product_reviews (product_id,user_id,order_id,rating,comment) VALUES (?,?,?,?,?)', [productId, req.user.id, orderId, rating, comment]);
+  } catch (err) {
+    if (err.code === 'ER_DUP_ENTRY') return res.status(409).json({ message: 'You have already reviewed this product from that order' });
+    throw err;
+  }
+  res.status(201).json({ message: 'Review submitted' });
 };
 
 exports.listCategories = async (req, res) => {

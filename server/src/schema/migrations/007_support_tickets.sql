@@ -1,0 +1,29 @@
+CREATE TABLE IF NOT EXISTS support_tickets (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  ticket_number VARCHAR(32) NOT NULL UNIQUE,
+  user_id BIGINT UNSIGNED NOT NULL,
+  order_id BIGINT UNSIGNED NULL,
+  subject VARCHAR(200) NOT NULL,
+  category ENUM('ORDER','PAYMENT','DELIVERY','PRODUCT','ACCOUNT','OTHER') NOT NULL DEFAULT 'OTHER',
+  status ENUM('OPEN','IN_PROGRESS','WAITING_CUSTOMER','RESOLVED','CLOSED') NOT NULL DEFAULT 'OPEN',
+  priority ENUM('LOW','NORMAL','HIGH') NOT NULL DEFAULT 'NORMAL',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS support_messages (
+  id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  ticket_id BIGINT UNSIGNED NOT NULL,
+  sender_user_id BIGINT UNSIGNED NOT NULL,
+  body VARCHAR(4000) NOT NULL,
+  is_internal BOOLEAN NOT NULL DEFAULT FALSE,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (ticket_id) REFERENCES support_tickets(id) ON DELETE CASCADE,
+  FOREIGN KEY (sender_user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_support_tickets_user_updated ON support_tickets(user_id, updated_at);
+CREATE INDEX idx_support_tickets_status_updated ON support_tickets(status, updated_at);
+CREATE INDEX idx_support_messages_ticket_created ON support_messages(ticket_id, created_at);

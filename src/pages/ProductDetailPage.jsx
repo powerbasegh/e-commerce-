@@ -16,6 +16,8 @@ import Toast from '../components/Toast.jsx'
 import { formatGHS } from '../data/mockData.js'
 import { api } from '../services/api.js'
 import { useCart } from '../context/CartContext.jsx'
+import ReviewsSection from '../components/ReviewsSection.jsx'
+import ProductReviewForm from '../components/ProductReviewForm.jsx'
 
 // Product details are read straight from the real product API — no rating,
 // review count, or vendor information is shown because the backend doesn't
@@ -29,6 +31,7 @@ export default function ProductDetailPage() {
   const [related, setRelated] = useState([])
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
+  const [reviewRefresh, setReviewRefresh] = useState(0)
 
   const [quantity, setQuantity] = useState(1)
   const [toastMessage, setToastMessage] = useState('')
@@ -66,7 +69,7 @@ export default function ProductDetailPage() {
     return () => {
       cancelled = true
     }
-  }, [productId])
+  }, [productId, reviewRefresh])
 
   function showToast(message) {
     setToastMessage(message)
@@ -137,7 +140,21 @@ export default function ProductDetailPage() {
                 <DeliveryInfo />
                 <BuyerProtectionSection />
               </div>
+              {product.reviews && (
+                <div className="flex flex-col gap-4">
+                  <ReviewsSection {...product.reviews} />
+                  <ProductReviewForm productId={product.id} onSubmitted={() => setReviewRefresh((v) => v + 1)} />
+                </div>
+              )}
             </div>
+            {product.reviews && (
+              <div className="grid grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] gap-8">
+                <div className="flex flex-col gap-4">
+                  <ReviewsSection {...product.reviews} />
+                  <ProductReviewForm productId={product.id} onSubmitted={() => setReviewRefresh((v) => v + 1)} />
+                </div>
+              </div>
+            )}
 
             <ProductScrollRow title="Related Products" products={related} viewAllHref={product.category ? `/search?category=${product.category.id}` : '/search'} />
           </>

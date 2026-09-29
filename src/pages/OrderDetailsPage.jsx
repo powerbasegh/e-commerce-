@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useSearchParams } from 'react-router-dom'
 import Header from '../components/Header.jsx'
 import MobileHeader from '../components/MobileHeader.jsx'
 import Breadcrumbs from '../components/Breadcrumbs.jsx'
@@ -27,7 +27,9 @@ function formatOrderDate(isoString) {
 
 export default function OrderDetailsPage() {
   const { orderNumber } = useParams()
+  const [searchParams] = useSearchParams()
   const { isAuthenticated } = useAuth()
+  const paymentReference = searchParams.get('reference')
 
   // Logged-in customers fetch their real order from the backend — the
   // server re-verifies req.user owns the order_number before returning
@@ -48,8 +50,9 @@ export default function OrderDetailsPage() {
     let cancelled = false
     setLoading(true)
     setLoadError(false)
-    api
-      .getOrderById(orderNumber)
+    const verifyFirst = paymentReference ? api.verifyPayment(orderNumber, paymentReference).catch(() => null) : Promise.resolve(null)
+    verifyFirst
+      .then(() => api.getOrderById(orderNumber))
       .then((data) => {
         if (cancelled) return
         setOrder(adaptOrderDetails(data))
@@ -66,7 +69,7 @@ export default function OrderDetailsPage() {
     return () => {
       cancelled = true
     }
-  }, [isAuthenticated, orderNumber])
+  }, [isAuthenticated, orderNumber, paymentReference])
 
   if (loading) {
     return (

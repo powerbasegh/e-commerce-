@@ -1,0 +1,11 @@
+const router=require('express').Router();
+const c=require('../controllers/deliveryController');
+const a=require('../utils/asyncHandler');
+const {authenticate,authorize}=require('../middleware/auth');
+router.use(authenticate,authorize('ADMIN'));
+router.get('/',a(c.adminList));
+router.get('/analytics',a(c.adminAnalytics));
+router.patch('/:id/quote',a(c.adminQuote));
+router.patch('/:id/assign',a(c.adminAssign));
+router.patch('/:id/status',a(c.adminStatus));
+module.exports=router;

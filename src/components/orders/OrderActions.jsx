@@ -6,12 +6,12 @@ import { useCart } from '../../context/CartContext.jsx'
 
 // The order itself never tells the frontend "payment succeeded" — only
 // PowerBase's backend does, via order.status flipping to CONFIRMED once a
-// verified Hubtel callback (or an Admin manual confirmation) lands. This
+// verified Paystack webhook or server-side verification (or an Admin manual confirmation) lands. This
 // component's job while status is DELIVERY_FEE_QUOTED is narrower: show
-// what payments.status currently is, and hand off to Hubtel's own hosted
+// what payments.status currently is, and hand off to Paystack's hosted
 // checkout page for anything payment-shaped. It never assumes success from
 // a click, a redirect, or a closed tab — see paymentController.initiate and
-// webhookController.hubtelCallback on the backend for where that's decided.
+// webhookController.paystackWebhook on the backend for where that's decided.
 function PayNowAction({ order, secondary }) {
   const [payment, setPayment] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -34,7 +34,7 @@ function PayNowAction({ order, secondary }) {
     setError('')
     try {
       const res = await api.initiatePayment(order.orderNumber)
-      // Hand off to Hubtel's own hosted checkout page — PowerBase does not
+      // Hand off to Paystack's hosted checkout page — PowerBase does not
       // build its own card/mobile-money entry form (Phase 1I).
       window.location.href = res.checkoutUrl
     } catch (err) {

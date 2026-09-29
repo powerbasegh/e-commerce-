@@ -155,16 +155,19 @@ function accountReducer(state, action) {
     case 'ADD_NOTIFICATION':
       return { ...state, notifications: [action.payload, ...state.notifications] }
 
-    case 'MARK_NOTIFICATION_READ':
+    case 'MARK_NOTIFICATION_READ': {
+      const notifications = state.notifications.map((n) =>
+        n.id === action.payload.id ? { ...n, read: true } : n,
+      )
       return {
         ...state,
-        notifications: state.notifications.map((n) =>
-          n.id === action.payload.id ? { ...n, read: true } : n,
-        ),
+        notifications,
+        notificationUnreadCount: notifications.filter((n) => !n.read).length,
       }
+    }
 
     case 'MARK_ALL_NOTIFICATIONS_READ':
-      return { ...state, notifications: state.notifications.map((n) => ({ ...n, read: true })) }
+      return { ...state, notifications: state.notifications.map((n) => ({ ...n, read: true })), notificationUnreadCount: 0 }
 
     // Replaces addresses/notifications with the authenticated customer's
     // real backend data (fetched on login — see AccountProvider's effect
@@ -188,6 +191,7 @@ function accountReducer(state, action) {
         ...state,
         addresses: action.payload.addresses ?? state.addresses,
         notifications: action.payload.notifications ?? state.notifications,
+        notificationUnreadCount: action.payload.notificationUnreadCount ?? state.notificationUnreadCount,
       }
 
     default:
@@ -236,6 +240,7 @@ export function AccountProvider({ children }) {
           payload: {
             addresses: (addrData.addresses || []).map(adaptApiAddress),
             notifications: (notifData.notifications || []).map(adaptApiNotification),
+            notificationUnreadCount: (notifData.notifications || []).filter((n) => !n.is_read).length,
           },
         })
         setSyncedWithApi(true)
@@ -250,6 +255,27 @@ export function AccountProvider({ children }) {
       cancelled = true
     }
   }, [isAuthenticated])
+
+  // Keep the notification badge current while the customer is logged in.
+  // This is intentionally lightweight: only the unread count is polled,
+  // while the full notification list is refreshed when the customer opens
+  // the notification center or explicitly calls refreshFromApi().
+  useEffect(() => {
+    if (!isAuthenticated || !syncedWithApi) return undefined
+    let cancelled = false
+    const refreshUnreadCount = async () => {
+      try {
+        const data = await api.getNotificationUnreadCount()
+        if (cancelled) return
+        dispatch({ type: 'SET_NOTIFICATION_UNREAD_COUNT', payload: Number(data.unreadCount || 0) })
+      } catch {
+        // Badge refresh is non-critical; keep the last known state.
+      }
+    }
+    refreshUnreadCount()
+    const interval = window.setInterval(refreshUnreadCount, 30000)
+    return () => { cancelled = true; window.clearInterval(interval) }
+  }, [isAuthenticated, syncedWithApi])
 
   // Once logged in, if no local profile has ever been saved, seed the
   // editable profile form from the authenticated user's real account
@@ -378,6 +404,7 @@ export function AccountProvider({ children }) {
           payload: {
             addresses: addrData.addresses.map(adaptApiAddress),
             notifications: notifData.notifications.map(adaptApiNotification),
+            notificationUnreadCount: notifData.notifications.filter((n) => !n.is_read).length,
           },
         })
       },
@@ -405,7 +432,9 @@ export function useAccount() {
   }
 
   const defaultAddress = state.addresses.find((a) => a.isDefault) ?? null
-  const unreadNotificationCount = state.notifications.filter((n) => !n.read).length
+  const unreadNotificationCount = Number.isFinite(state.notificationUnreadCount)
+    ? state.notificationUnreadCount
+    : state.notifications.filter((n) => !n.read).length
   const hasProfile = Boolean(state.profile.fullName || state.profile.email || state.profile.phone)
 
   return {

@@ -1,6 +1,7 @@
 import Icon from './Icon.jsx'
 
-function timeAgo(days) {
+function timeAgo(date) {
+  const days = Math.max(0, Math.floor((Date.now() - new Date(date).getTime()) / 86400000))
   if (days < 1) return 'Today'
   if (days === 1) return '1 day ago'
   if (days < 30) return `${days} days ago`
@@ -48,7 +49,7 @@ export default function ReviewsSection({ average, total, breakdown, reviews }) {
                   Verified Purchase
                 </span>
               )}
-              <span className="text-xs text-pb-gray-muted">{timeAgo(review.daysAgo)}</span>
+              <span className="text-xs text-pb-gray-muted">{timeAgo(review.createdAt)}</span>
             </div>
             <div className="flex gap-0.5 text-pb-amber">
               {Array.from({ length: 5 }).map((_, i) => (

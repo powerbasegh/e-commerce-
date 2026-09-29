@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs');
 const { releaseItems } = require('../services/stockService');
 const { customerEventTitle, customerEventDescription, isReadyForDelivery } = require('../services/orderStateService');
 const paymentService = require('../services/paymentService');
+const paymentProviderService = require('../services/paymentProviderService');
 const { releaseExpiredReservations } = require('../services/reservationService');
 
 // ---------------------------------------------------------------------------
@@ -174,15 +175,23 @@ exports.confirmPayment = async (req,res)=>{
   if(status==='PAID' && !transactionReference) return res.status(400).json({message:'A provider transaction reference is required when confirming a payment as PAID'});
   if(status==='PAID' && !provider) return res.status(400).json({message:'A payment provider is required when confirming a payment as PAID'});
 
-  // This is the manually-operated twin of paymentController.hubtelCallback:
-  // both ultimately call the same paymentService.applyPaymentOutcome, so the
-  // stock/order/settlement/event/notification cascade can never drift
-  // between "an operator told PowerBase a payment succeeded" and "a
-  // verified provider webhook told PowerBase a payment succeeded". What
-  // differs is how each establishes trust — this endpoint trusts the
-  // authenticated Admin's word for it (e.g. reading a provider dashboard or
-  // a phone confirmation); the webhook independently verifies the caller,
-  // reference and amount before ever reaching applyPaymentOutcome.
+  // Manual Admin confirmation is still available for reconciliation, but a
+  // PAID result must be independently verified with Paystack. Admin input is
+  // never treated as proof of payment by itself.
+  if(status==='PAID'){
+    if(provider.toUpperCase()!=='PAYSTACK') return res.status(400).json({message:'Paid payments must be verified through Paystack'});
+    const [paymentRows]=await db.execute('SELECT p.amount,p.client_reference,o.user_id FROM payments p JOIN orders o ON o.id=p.order_id WHERE p.order_id=? LIMIT 1',[orderId]);
+    if(!paymentRows.length) return res.status(404).json({message:'Payment not found'});
+    const expected=paymentRows[0];
+    if(expected.client_reference && expected.client_reference!==transactionReference) return res.status(409).json({message:'Transaction reference does not match this payment'});
+    try{
+      const verified=await paymentProviderService.getProvider('PAYSTACK').verifyPayment(transactionReference);
+      if(verified.status!=='PAID' || verified.reference!==transactionReference || verified.currency!=='GHS' || verified.amountSubunit!==Math.round(Number(expected.amount)*100)){
+        return res.status(409).json({message:'Paystack could not verify this payment for the stored order amount'});
+      }
+    }catch(e){ return res.status(502).json({message:'Could not verify the Paystack transaction'}); }
+  }
+
   const conn=await db.getConnection();
   try{
     await conn.beginTransaction();
