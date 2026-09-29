@@ -24,6 +24,6 @@ CREATE TABLE IF NOT EXISTS support_messages (
   FOREIGN KEY (sender_user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_support_tickets_user_updated ON support_tickets(user_id, updated_at);
-CREATE INDEX idx_support_tickets_status_updated ON support_tickets(status, updated_at);
-CREATE INDEX idx_support_messages_ticket_created ON support_messages(ticket_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_support_tickets_user_updated ON support_tickets(user_id, updated_at);
+CREATE INDEX IF NOT EXISTS idx_support_tickets_status_updated ON support_tickets(status, updated_at);
+CREATE INDEX IF NOT EXISTS idx_support_messages_ticket_created ON support_messages(ticket_id, created_at);

@@ -166,9 +166,9 @@ CREATE TABLE IF NOT EXISTS notifications (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE INDEX idx_orders_user_created ON orders(user_id,created_at);
-CREATE INDEX idx_vendor_orders_vendor ON vendor_orders(vendor_id,created_at);
-CREATE INDEX idx_notifications_user_created ON notifications(user_id,created_at);
-CREATE UNIQUE INDEX uq_products_vendor_sku ON products(vendor_id, sku);
-CREATE INDEX idx_products_vendor_active ON products(vendor_id,is_active);
-CREATE INDEX idx_order_items_stock_state ON order_items(stock_state);
+CREATE INDEX IF NOT EXISTS idx_orders_user_created ON orders(user_id,created_at);
+CREATE INDEX IF NOT EXISTS idx_vendor_orders_vendor ON vendor_orders(vendor_id,created_at);
+CREATE INDEX IF NOT EXISTS idx_notifications_user_created ON notifications(user_id,created_at);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_products_vendor_sku ON products(vendor_id, sku);
+CREATE INDEX IF NOT EXISTS idx_products_vendor_active ON products(vendor_id,is_active);
+CREATE INDEX IF NOT EXISTS idx_order_items_stock_state ON order_items(stock_state);

@@ -7,7 +7,9 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "db:migrate": "node scripts/runMigrations.js",
-    "seed:demo": "node scripts/seedDemoAccounts.js"
+    "seed:demo": "node scripts/seedDemoAccounts.js",
+    "db:migrate:status": "node scripts/runMigrations.js --status",
+    "test:migrations": "node tests/migrations.unit.test.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
